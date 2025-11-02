@@ -318,3 +318,4 @@ For questions or issues, please open an issue on the repository.
 ---
 
 Built with ❤️ using Next.js and Material UI
+# Mindset
