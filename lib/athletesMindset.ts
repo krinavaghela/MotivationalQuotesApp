@@ -1,0 +1,371 @@
+'use client';
+
+export interface AthleteMindset {
+  slug: string;
+  name: string;
+  sport: string;
+  country: string;
+  image: string;
+  headline: string;
+  summary: string;
+  signatureMoment: string;
+  mindsets: string[];
+  dailyHabits: string[];
+  transferToLife: string[];
+  themes: string[];
+  reference?: string;
+}
+
+export const athleteMindsets: AthleteMindset[] = [
+  {
+    slug: 'novak-djokovic',
+    name: 'Novak Djokovic',
+    sport: 'Tennis',
+    country: 'Serbia',
+    image:
+      'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1200&q=80',
+    headline: 'Breathing through chaos to play the next point',
+    summary:
+      'From practising in bomb shelters to winning 24 Grand Slams, Djokovic rewired pressure into presence through mindfulness and engineered recovery.',
+    signatureMoment:
+      '2019 Wimbledon final: down two match points, he slowed his breathing, repeated his mantra “next point,” and stole momentum to win in five sets.',
+    mindsets: [
+      'Micro-focus: he treats every point as a new universe, never the scoreboard.',
+      'Emotional recycling: journaling and breathwork turn anger into tactical clarity.',
+      'Stretch, sleep, sunlight: recovery rituals matter as much as hitting sessions.',
+    ],
+    dailyHabits: [
+      '10-minute Wim Hof style breathing + gratitude visualisation before practice.',
+      'Plant-forward nutrition with strict hydration targets and herbal teas for sleep.',
+      'Cold therapy + yoga flow after every intense session to “reset the nervous system.”',
+    ],
+    transferToLife: [
+      'Name the pressure, then shrink the timeline to the next action you control.',
+      'Pair a grounding ritual (breath, mantra, physical anchor) with every major decision.',
+      'Schedule recovery with the same respect as deep work blocks.',
+    ],
+    themes: ['resilience', 'presence', 'rituals'],
+    reference: 'The Mindset of Novak Djokovic – ATP Podcast',
+  },
+  {
+    slug: 'neeraj-chopra',
+    name: 'Neeraj Chopra',
+    sport: 'Javelin Throw',
+    country: 'India',
+    image:
+      'https://images.unsplash.com/photo-1521417531039-58c790b36528?auto=format&fit=crop&w=1200&q=80',
+    headline: 'Rural grit polished into Olympic calm',
+    summary:
+      'Neeraj rebuilt himself after elbow surgery with obsessive patience, swapping self-doubt for data-driven training logs and relentless mobility work.',
+    signatureMoment:
+      'Tokyo 2020 qualifier: fouled first throw, recalled coach’s cue “rhythm over rage,” reset his run-up tempo and topped the field.',
+    mindsets: [
+      'Curiosity beats ego: every throw is a feedback loop, not a verdict.',
+      'Small-town humility keeps goals process-led, not headline-led.',
+      'Body respect: mobility and sleep journalling are non-negotiable pillars.',
+    ],
+    dailyHabits: [
+      'Warm-up checklist taped inside his bag—no throw until each box is ticked.',
+      'Post-session voice note to his coach capturing feel, not just numbers.',
+      'Weekly “village phone call” grounding him in gratitude and purpose.',
+    ],
+    transferToLife: [
+      'Create a reset phrase to interrupt panic and re-centre on rhythm.',
+      'Log qualitative reflections alongside metrics to spot compounding gains.',
+      'Stay tethered to people who remind you why you started.',
+    ],
+    themes: ['discipline', 'adaptability', 'gratitude'],
+  },
+  {
+    slug: 'jemimah-rodrigues',
+    name: 'Jemimah Rodrigues',
+    sport: 'Cricket',
+    country: 'India',
+    image:
+      'https://images.unsplash.com/photo-1521336575822-6da63fb45455?auto=format&fit=crop&w=1200&q=80',
+    headline: 'Joy-first batting that disarms pressure',
+    summary:
+      'Jemimah rebuilt confidence after being dropped from the national side by doubling down on playful practice, music, and mental reps with a growth notebook.',
+    signatureMoment:
+      '2022 Commonwealth Games: returning after omission, she anchored a tense chase by humming her favourite worship song between balls to stay loose.',
+    mindsets: [
+      'Identity separation: scorecards don’t define her—values do.',
+      'Play as preparation: she injects fun into drills to keep creativity alive.',
+      'Faith lens: reframes setbacks as assignments, not verdicts.',
+    ],
+    dailyHabits: [
+      'Three-line gratitude entry + intention before training.',
+      'Finishes net sessions with “freedom overs”—no fielders, just flow.',
+      'Records short pep-talk voice notes for future high-pressure scenes.',
+    ],
+    transferToLife: [
+      'Protect the activities that remind you of your bigger identity.',
+      'Design your practice to include joy so that stress doesn’t hijack skill.',
+      'Archive messages to your future self for wobbly days.',
+    ],
+    themes: ['joy', 'comeback', 'confidence'],
+  },
+  {
+    slug: 'virat-kohli',
+    name: 'Virat Kohli',
+    sport: 'Cricket',
+    country: 'India',
+    image:
+      'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80',
+    headline: 'Turning obsession into disciplined ferocity',
+    summary:
+      'Kohli transformed from a talented but inconsistent teenager into a machine by auditing nutrition, sleep, and inner talk—cultivating ruthless honesty.',
+    signatureMoment:
+      '2014 England tour slump: instead of overtraining, he hired a mindset coach, adopted meditation, and rebuilt his trigger movement from scratch.',
+    mindsets: [
+      'Radical responsibility—every weakness is a scoreboard for improvement.',
+      'Battery management—protect energy with rituals around sleep and food.',
+      'Competitive compassion—fierce on field, grounded off it.',
+    ],
+    dailyHabits: [
+      '4:30am wake-up on match days for meditation + visualisation of key scenarios.',
+      'Plant-based, measured meals and zero processed sugar.',
+      'Nightly review of “wins, learns, gratitude.”',
+    ],
+    transferToLife: [
+      'Audit one habit each month and upgrade it deliberately.',
+      'Build a pre-performance script (sleep, movement, mental) to set your tone.',
+      'Balance your intensity with intentional recovery and relationships.',
+    ],
+    themes: ['discipline', 'intensity', 'leadership'],
+  },
+  {
+    slug: 'pv-sindhu',
+    name: 'P. V. Sindhu',
+    sport: 'Badminton',
+    country: 'India',
+    image:
+      'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80',
+    headline: 'Relentless rallies built on simple, repeatable systems',
+    summary:
+      'Sindhu traded teenage inconsistency for Olympic medals by trusting daily repetition and mental conditioning that rehearsed adversity before it arrived.',
+    signatureMoment:
+      '2019 World Championship final: dominated by sticking to pre-planned rally patterns and breathing resets after every point.',
+    mindsets: [
+      'Pre-scripted responses to tough situations reduce panic.',
+      'Strength and conditioning as armour against doubt.',
+      'Visualising podium moments to keep long-term fire burning.',
+    ],
+    dailyHabits: [
+      'Training split into focussed blocks with mini recovery “oxygen breaks.”',
+      'Film study each evening with handwritten tactical notes.',
+      'Mirror affirmations reinforcing patience and aggression balance.',
+    ],
+    transferToLife: [
+      'Document contingency plans for known stress triggers.',
+      'Use a short breath pattern to reset posture between tasks.',
+      'Write out your “next best action” after visualising success.',
+    ],
+    themes: ['consistency', 'confidence', 'planning'],
+  },
+  {
+    slug: 'ms-dhoni',
+    name: 'M. S. Dhoni',
+    sport: 'Cricket',
+    country: 'India',
+    image:
+      'https://images.unsplash.com/photo-1529158062015-cad636e69505?auto=format&fit=crop&w=1200&q=80',
+    headline: 'Calm captaincy through detachment and clarity',
+    summary:
+      'Dhoni’s superpower is emotional neutrality—reading the game two steps ahead while trusting instinct honed by relentless match simulations.',
+    signatureMoment:
+      '2011 World Cup final chase: promoted himself up the order, simplified the target into mini chases, and ended with the iconic six.',
+    mindsets: [
+      'Detach from noise—he watches opponents more than scoreboards.',
+      'Back your calls—clarity beats consensus in crunch moments.',
+      'Keep humour alive—lightness keeps the dressing room loose.',
+    ],
+    dailyHabits: [
+      'Long reactive drills with tennis balls to sharpen glove speed.',
+      'Meditative motorbike rides or dog walks to flush stress.',
+      'Strict device-free window before sleep to protect judgement.',
+    ],
+    transferToLife: [
+      'Break a project into micro-targets you can audit live.',
+      'Practise calling decisions quickly to trust your gut.',
+      'Curate recovery rituals that turn down mental volume.',
+    ],
+    themes: ['calm', 'decision-making', 'leadership'],
+  },
+  {
+    slug: 'kobe-bryant',
+    name: 'Kobe Bryant',
+    sport: 'Basketball',
+    country: 'USA',
+    image:
+      'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80&sat=-20',
+    headline: 'The Mamba Mentality: curiosity fuelled mastery',
+    summary:
+      'Kobe fused ferocious work ethic with film-room obsession, treating failure as intel. He reverse-engineered greatness and mentored future generations.',
+    signatureMoment:
+      '81-point game vs. Raptors: meticulous shot charting met unshakeable confidence born from 4am workouts.',
+    mindsets: [
+      'Infinite learner: he cold-called experts in music, business, sport.',
+      'Process addict: success is a by-product of relentless repetition.',
+      'Creative edge: storytelling and curiosity kept burnout away.',
+    ],
+    dailyHabits: [
+      '“666” programme—6 hours practice, 6 days a week, 6 months off-season.',
+      'Detailed journalling of footwork angles after games.',
+      'Guided visualisation imagining defenders’ counters.',
+    ],
+    transferToLife: [
+      'Find mentors outside your industry to cross-pollinate thinking.',
+      'Document your craft with the precision of an engineer.',
+      'View criticism as direction, not attack.',
+    ],
+    themes: ['obsession', 'craft', 'curiosity'],
+  },
+  {
+    slug: 'saina-nehwal',
+    name: 'Saina Nehwal',
+    sport: 'Badminton',
+    country: 'India',
+    image:
+      'https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1200&q=80',
+    headline: 'Bouncing back through grit and reinvention',
+    summary:
+      'Saina broke into the top ranks with relentless defence, then reinvented herself after injuries with smarter training loads and mentor check-ins.',
+    signatureMoment:
+      '2012 Olympic bronze run: overcame back niggles by simplifying tactics to energy-preserving shots.',
+    mindsets: [
+      'Failure as feedback—every injury forced a smarter version of her game.',
+      'Structured aggression—knowing when to push the pace.',
+      'Mentors matter—phone calls with legends kept belief alive.',
+    ],
+    dailyHabits: [
+      'Alternating physio + strength sessions to balance power and resilience.',
+      'Pre-match playlist and prayer to calm nerves.',
+      'Weekly review with coach focussing on movement economy.',
+    ],
+    transferToLife: [
+      'Audit your workload and build buffers before burnout hits.',
+      'Seek mentors proactively—they lend belief when yours wavers.',
+      'Have a short ritual that symbolises “game time.”',
+    ],
+    themes: ['resilience', 'reinvention', 'mentorship'],
+  },
+  {
+    slug: 'lionel-messi',
+    name: 'Lionel Messi',
+    sport: 'Football',
+    country: 'Argentina',
+    image:
+      'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80&sat=-30',
+    headline: 'Quiet genius anchored in family and feel',
+    summary:
+      'Messi compensates for size with balance, anticipation, and deep joy. His mindset blends humility, visualisation, and a childlike love for the ball.',
+    signatureMoment:
+      '2022 World Cup: carried Argentina by trusting team chemistry, conserving bursts, and visualising penalties the night before.',
+    mindsets: [
+      'Playful flow—he treats matches like street football with friends.',
+      'Patience—waits for the moment instead of forcing it.',
+      'Family anchor—keeps fame in perspective.',
+    ],
+    dailyHabits: [
+      'Simple Mediterranean meals tuned to match-day needs.',
+      'Balance and agility work with minimal equipment.',
+      'Visualisation of passing lanes and defenders’ weight transfer.',
+    ],
+    transferToLife: [
+      'Double down on your unique edge; you don’t need to mirror rivals.',
+      'Let joy be the driver for mastery.',
+      'Keep your inner circle tight to stay grounded.',
+    ],
+    themes: ['flow', 'humility', 'vision'],
+  },
+  {
+    slug: 'sheetal-devi',
+    name: 'Sheetal Devi',
+    sport: 'Para Archery',
+    country: 'India',
+    image:
+      'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80',
+    headline: 'Turning constraints into superpowers',
+    summary:
+      'Born without arms, Sheetal shoots with her feet. She embraced adaptive training, mental resilience, and community inspiration to win gold at the Para Asian Games.',
+    signatureMoment:
+      '2023 Para Asian Games final: calm breathing and mantra “steady, strong” before each shot carried her to gold.',
+    mindsets: [
+      'Resourcefulness—no limitations, only new techniques to learn.',
+      'Community fuel—she feeds off inspiring other differently-abled athletes.',
+      'Presence—locks on to one shot at a time.',
+    ],
+    dailyHabits: [
+      'Core stability and flexibility drills tailored to her shooting style.',
+      'Daily affirmations celebrating progress, not perfection.',
+      'Story-sharing sessions with young athletes to reinforce purpose.',
+    ],
+    transferToLife: [
+      'Reframe constraints as creativity challenges.',
+      'Let purpose (who you inspire) fuel persistence.',
+      'Celebrate micro-progress to sustain motivation.',
+    ],
+    themes: ['purpose', 'innovation', 'resilience'],
+  },
+  {
+    slug: 'michael-jordan',
+    name: 'Michael Jordan',
+    sport: 'Basketball',
+    country: 'USA',
+    image:
+      'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=80',
+    headline: 'Competitive fire fuelled by manufactured motivation',
+    summary:
+      'Jordan turned slights into rocket fuel, pairing insane competitiveness with relentless fundamentals work and imagery of big moments.',
+    signatureMoment:
+      '“Flu Game” 1997 NBA Finals: dehydrated and exhausted, he visualised each possession, paced himself, and still dropped 38 points.',
+    mindsets: [
+      'Turn every criticism into a challenge.',
+      'Mastery starts with footwork and fundamentals.',
+      'Expect greatness from teammates by modelling it yourself.',
+    ],
+    dailyHabits: [
+      'Pre-dawn shooting drills counted in swishes, not attempts.',
+      'Film study to anticipate opponents’ patterns.',
+      'Mental rehearsal of game-winning shots nightly.',
+    ],
+    transferToLife: [
+      'Let setbacks be prompts to expand your toolkit.',
+      'Perfect the basics; they anchor innovation.',
+      'Lead visibly—your standards shape collective culture.',
+    ],
+    themes: ['competitiveness', 'fundamentals', 'leadership'],
+  },
+  {
+    slug: 'lionel-messi-2',
+    name: 'Lionel Messi (Legacy Mode)',
+    sport: 'Football',
+    country: 'Argentina',
+    image:
+      'https://images.unsplash.com/photo-1522770179533-24471fcdba45?auto=format&fit=crop&w=1200&q=80',
+    headline: 'Late-career reinvention rooted in trust',
+    summary:
+      'Messi’s move to PSG and World Cup run emphasised collaboration, trust in younger teammates, and a calmer leadership voice.',
+    signatureMoment:
+      '2022 World Cup semi-final assist vs Croatia—paused, read the defender’s weight, and delivered a perfect cut-back.',
+    mindsets: [
+      'Let the team breathe—he shares responsibility more willingly.',
+      'Stay patient—experience turns into a chess game.',
+      'Celebrate others—team joy sparks personal freedom.',
+    ],
+    dailyHabits: [
+      'Short, sharp ball mastery sessions to keep touch electric.',
+      'Hydrotherapy and flexibility sessions for longevity.',
+      'Family dinners tech-free after matches.',
+    ],
+    transferToLife: [
+      'Mentor actively—it multiplies your impact.',
+      'Balance individual brilliance with collaborative setups.',
+      'Create rituals that mark the transition from work to home.',
+    ],
+    themes: ['teamwork', 'reinvention', 'longevity'],
+  },
+];
+
+

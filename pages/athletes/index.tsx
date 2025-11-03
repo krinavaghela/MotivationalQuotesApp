@@ -1,12 +1,12 @@
-'use client';
-
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Head from 'next/head';
 import {
   Alert,
+  Avatar,
   Box,
   Button,
   Card,
+  CardActionArea,
   CardContent,
   Chip,
   Container,
@@ -18,11 +18,6 @@ import {
   Grid,
   IconButton,
   InputAdornment,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  Skeleton,
   Snackbar,
   Stack,
   TextField,
@@ -33,395 +28,330 @@ import {
 } from '@mui/material';
 import {
   AutoAwesome,
-  Close,
-  ContentCopy,
   Favorite as FavoriteIcon,
   FavoriteBorder,
-  Facebook,
-  Instagram,
   RestartAlt,
   Search,
   Share as ShareIcon,
   Sort,
-  Twitter,
-  FilterList,
   ArrowOutward,
+  ContentCopy,
+  Twitter,
+  Facebook,
+  Instagram,
+  Close,
 } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
 import { alpha, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import Navbar from '@/components/Navbar';
-import { getFavorites, removeFromFavorites, saveToFavorites } from '@/lib/utils';
+import { athleteMindsets, AthleteMindset } from '@/lib/athletesMindset';
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
-const INITIAL_VISIBLE_CARDS = 12;
+const STORAGE_KEY = 'athleteMindsetFavorites';
+const INITIAL_VISIBLE = 9;
 
-interface QuoteCardData {
-  _id: string;
-  content: string;
-  author: string;
-  category: string;
-  tags: string[];
-}
+type SharePlatform = 'native' | 'twitter' | 'facebook' | 'instagram' | 'copy';
 
-type SharePlatform = 'twitter' | 'facebook' | 'instagram' | 'copy' | 'native';
-
-const CATEGORY_GRADIENTS: Record<string, [string, string]> = {
-  animals: ['#ff9a9e', '#fecfef'],
-  philosophy: ['#a18cd1', '#fbc2eb'],
-  psychology: ['#fddb92', '#d1fdff'],
-  nature: ['#a8edea', '#fed6e3'],
-  spirituality: ['#f6d365', '#fda085'],
-  sports: ['#84fab0', '#8fd3f4'],
-  art: ['#cfd9df', '#e2ebf0'],
-  technology: ['#89f7fe', '#66a6ff'],
-  ai: ['#d4fc79', '#96e6a1'],
-  love: ['#fbc2eb', '#a6c1ee'],
-  success: ['#fdfbfb', '#ebedee'],
-  health: ['#fa709a', '#fee140'],
-  travel: ['#ffecd2', '#fcb69f'],
-  default: ['#e0c3fc', '#8ec5fc'],
+type ToastState = {
+  open: boolean;
+  message: string;
+  severity: 'success' | 'info' | 'error';
 };
 
-const SOCIAL_PLATFORMS: Array<{
-  id: SharePlatform;
-  label: string;
-  icon: React.ReactNode;
-  description?: string;
-}> = [
-  { id: 'twitter', label: 'Share to Twitter', icon: <Twitter fontSize="small" /> },
-  { id: 'facebook', label: 'Share to Facebook', icon: <Facebook fontSize="small" /> },
-  { id: 'instagram', label: 'Share to Instagram', icon: <Instagram fontSize="small" /> },
-  { id: 'copy', label: 'Copy Link', icon: <ContentCopy fontSize="small" /> },
-];
+type FavoriteMap = Record<string, AthleteMindset>;
 
-const QuoteCard: React.FC<{
-  quote: QuoteCardData;
+const getFavoriteMap = (): FavoriteMap => {
+  if (typeof window === 'undefined') {
+    return {};
+  }
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (!stored) return {};
+    return JSON.parse(stored) as FavoriteMap;
+  } catch (error) {
+    console.warn('Unable to parse athlete favorites', error);
+    return {};
+  }
+};
+
+const persistFavorites = (map: FavoriteMap) => {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+};
+
+const themeLabel = (themeKey: string) => themeKey.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
+const AthleteCard = ({
+  athlete,
+  onSelect,
+  isFavorite,
+  onFavoriteToggle,
+}: {
+  athlete: AthleteMindset;
+  onSelect: (athlete: AthleteMindset) => void;
   isFavorite: boolean;
-  onFavoriteToggle: (quote: QuoteCardData) => void;
-  onShare: (quote: QuoteCardData, platform: SharePlatform) => void;
-}> = ({ quote, isFavorite, onFavoriteToggle, onShare }) => {
+  onFavoriteToggle: (athlete: AthleteMindset) => void;
+}) => {
   const theme = useTheme();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const gradient = CATEGORY_GRADIENTS[quote.category] ?? CATEGORY_GRADIENTS.default;
-
   return (
     <motion.div
       layout
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.4 }}
     >
       <Card
         elevation={0}
         sx={{
-          position: 'relative',
           height: '100%',
-          borderRadius: 4,
+          borderRadius: 5,
+          position: 'relative',
           overflow: 'hidden',
-          backdropFilter: 'blur(10px)',
-          boxShadow: '0 24px 55px rgba(138, 173, 255, 0.25)',
-          border: `1px solid ${alpha(theme.palette.common.black, 0.06)}`,
+          backdropFilter: 'blur(18px)',
+          background: `linear-gradient(135deg, ${alpha('#f8f9ff', 0.72)}, ${alpha('#e0e7ff', 0.85)})`,
+          border: '1px solid rgba(210, 220, 255, 0.55)',
+          boxShadow: '0 24px 45px rgba(130, 145, 200, 0.28)',
+          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
           '&:hover': {
-            transform: 'translateY(-8px)',
-            boxShadow: '0 32px 70px rgba(138, 173, 255, 0.28)',
+            transform: 'translateY(-10px)',
+            boxShadow: '0 34px 65px rgba(110, 125, 190, 0.38)',
           },
-          transition: 'all 0.3s ease',
         }}
       >
-        <Box
-          sx={{
-            position: 'relative',
-            px: 3,
-            py: 4,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            minHeight: 280,
-            background: `linear-gradient(135deg, ${gradient[0]} 0%, ${gradient[1]} 100%)`,
-            color: theme.palette.getContrastText(gradient[1]),
-          }}
-        >
-          <Box sx={{ position: 'absolute', inset: 0, opacity: 0.18, background: 'radial-gradient(circle at top right, rgba(255,255,255,0.6), transparent 55%)' }} />
-
-          <Stack direction="row" spacing={1.5} alignItems="center" sx={{ position: 'relative', mb: 3 }}>
-            <Chip
-              label={quote.category.charAt(0).toUpperCase() + quote.category.slice(1)}
-              size="small"
+        <CardActionArea sx={{ height: '100%', alignItems: 'stretch', display: 'flex', flexDirection: 'column' }} onClick={() => onSelect(athlete)}>
+          <Box
+            component="div"
+            sx={{
+              position: 'relative',
+              width: '100%',
+              pt: '56%',
+              borderBottom: '1px solid rgba(255,255,255,0.4)',
+              overflow: 'hidden',
+            }}
+          >
+            <Box
+              component="img"
+              alt={athlete.name}
+              src={athlete.image}
               sx={{
-                backgroundColor: alpha(theme.palette.common.white, 0.25),
-                color: theme.palette.common.white,
-                backdropFilter: 'blur(5px)',
-                fontWeight: 600,
-                letterSpacing: 0.4,
-                textTransform: 'capitalize',
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                filter: 'saturate(1.05)',
               }}
             />
-          </Stack>
-
-          <CardContent sx={{ position: 'relative', px: 0, pt: 0 }}>
-            <Typography
-              variant="h6"
-              component="blockquote"
+            <Box
               sx={{
-                fontWeight: 600,
-                fontSize: { xs: '1.1rem', sm: '1.35rem' },
-                lineHeight: 1.6,
-                fontStyle: 'italic',
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg, rgba(10,10,20,0.0) 0%, rgba(5,5,15,0.55) 100%)',
               }}
+            />
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ position: 'absolute', bottom: 16, left: 16, right: 16, alignItems: 'center' }}
             >
-              “{quote.content}”
-            </Typography>
-            <Typography
-              variant="subtitle2"
-              component="p"
-              sx={{
-                mt: 3,
-                fontWeight: 600,
-                opacity: 0.85,
-                letterSpacing: 0.4,
-              }}
-            >
-              — {quote.author}
-            </Typography>
+              <Avatar src={athlete.image} alt={athlete.name} sx={{ border: '2px solid rgba(255,255,255,0.7)' }} />
+              <Box>
+                <Typography variant="subtitle1" sx={{ color: '#fff', fontWeight: 700 }}>
+                  {athlete.name}
+                </Typography>
+                <Typography variant="caption" sx={{ color: alpha('#fff', 0.8) }}>
+                  {athlete.sport} · {athlete.country}
+                </Typography>
+              </Box>
+            </Stack>
+          </Box>
+          <CardContent sx={{ flexGrow: 1, width: '100%', p: 3 }}>
+            <Stack spacing={2}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                {athlete.headline}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                {athlete.summary}
+              </Typography>
+              <Stack direction="row" spacing={1} flexWrap="wrap">
+                {athlete.themes.slice(0, 3).map((themeKey) => (
+                  <Chip
+                    key={themeKey}
+                    size="small"
+                    label={themeLabel(themeKey)}
+                    sx={{
+                      borderRadius: 999,
+                      backgroundColor: alpha('#4c51bf', 0.12),
+                      color: '#4c51bf',
+                      fontWeight: 600,
+                    }}
+                  />
+                ))}
+              </Stack>
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Button
+                  variant="outlined"
+                  size="small"
+                  startIcon={isFavorite ? <FavoriteIcon /> : <FavoriteBorder />}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onFavoriteToggle(athlete);
+                  }}
+                  sx={{
+                    borderRadius: 999,
+                    px: 2.5,
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    borderColor: alpha('#4c51bf', 0.3),
+                    color: isFavorite ? '#d53f8c' : '#4c51bf',
+                    '&:hover': {
+                      borderColor: '#4c51bf',
+                      backgroundColor: alpha('#4c51bf', 0.08),
+                    },
+                  }}
+                >
+                  {isFavorite ? 'Saved' : 'Save'}
+                </Button>
+                <Button
+                  variant="text"
+                  size="small"
+                  endIcon={<ArrowOutward fontSize="small" />}
+                  onClick={() => onSelect(athlete)}
+                  sx={{ textTransform: 'none', fontWeight: 600 }}
+                >
+                  Learn mindset
+                </Button>
+              </Stack>
+            </Stack>
           </CardContent>
-
-          <Stack direction="row" spacing={1.5} sx={{ position: 'relative', mt: 3 }}>
-            <Button
-              size="small"
-              variant="outlined"
-              color="inherit"
-              startIcon={isFavorite ? <FavoriteIcon /> : <FavoriteBorder />}
-              onClick={() => onFavoriteToggle(quote)}
-              sx={{
-                borderRadius: 999,
-                px: 2.5,
-                borderColor: alpha(theme.palette.common.white, 0.7),
-                color: theme.palette.common.white,
-                '&:hover': {
-                  borderColor: theme.palette.common.white,
-                  backgroundColor: alpha(theme.palette.common.white, 0.12),
-                },
-              }}
-            >
-              {isFavorite ? 'Favorited' : 'Favorite'}
-            </Button>
-            <Button
-              size="small"
-              variant="outlined"
-              color="inherit"
-              startIcon={<ShareIcon />}
-              onClick={(event) => {
-                if (typeof navigator.share === 'function') {
-                  onShare(quote, 'native');
-                  return;
-                }
-                setAnchorEl(event.currentTarget);
-              }}
-              sx={{
-                borderRadius: 999,
-                px: 2.5,
-                borderColor: alpha(theme.palette.common.white, 0.7),
-                color: theme.palette.common.white,
-                '&:hover': {
-                  borderColor: theme.palette.common.white,
-                  backgroundColor: alpha(theme.palette.common.white, 0.12),
-                },
-              }}
-            >
-              Share
-            </Button>
-          </Stack>
-
-          <Menu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={() => setAnchorEl(null)}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          >
-            {SOCIAL_PLATFORMS.map((platform) => (
-              <MenuItem
-                key={platform.id}
-                onClick={() => {
-                  onShare(quote, platform.id);
-                  setAnchorEl(null);
-                }}
-              >
-                <ListItemIcon>{platform.icon}</ListItemIcon>
-                <ListItemText primary={platform.label} />
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
+        </CardActionArea>
       </Card>
     </motion.div>
   );
 };
 
-export default function QuotesGalleryPage() {
+export default function AthleteMindsetGallery() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const [quotes, setQuotes] = useState<QuoteCardData[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+  const [themeFilter, setThemeFilter] = useState<string>('all');
   const [sortOption, setSortOption] = useState<'az' | 'za'>('az');
-  const [displayCount, setDisplayCount] = useState(INITIAL_VISIBLE_CARDS);
-  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
-  const [randomQuote, setRandomQuote] = useState<QuoteCardData | null>(null);
-  const [randomDialogOpen, setRandomDialogOpen] = useState(false);
-  const [toast, setToast] = useState<{ open: boolean; message: string; severity: 'success' | 'info' | 'error' }>({
-    open: false,
-    message: '',
-    severity: 'success',
-  });
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE);
+  const [selectedAthlete, setSelectedAthlete] = useState<AthleteMindset | null>(null);
+  const [favorites, setFavorites] = useState<FavoriteMap>({});
+  const [toast, setToast] = useState<ToastState>({ open: false, message: '', severity: 'success' });
+  const [randomOpen, setRandomOpen] = useState(false);
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const loadQuotes = async () => {
-      try {
-        const response = await fetch(`${basePath}/data/quotes.json`);
-        const data: Array<{ text: string; author: string; category: string }> = await response.json();
-        const mapped = data.map((quote, index) => ({
-          _id: `${quote.category}-${index}-${quote.text.substring(0, 24).replace(/[^a-z0-9]+/gi, '-')}`.toLowerCase(),
-          content: quote.text,
-          author: quote.author,
-          category: quote.category,
-          tags: [quote.category],
-        }));
-        setQuotes(mapped);
-      } catch (error) {
-        console.error('Error loading quotes:', error);
-        setToast({ open: true, message: 'Unable to load quotes. Please try again.', severity: 'error' });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadQuotes();
+    setFavorites(getFavoriteMap());
   }, []);
 
-  useEffect(() => {
-    const storedFavorites = getFavorites();
-    setFavoriteIds(new Set(storedFavorites.map((quote) => quote._id)));
+  const themeOptions = useMemo(() => {
+    const set = new Set<string>();
+    athleteMindsets.forEach((athlete) => athlete.themes.forEach((t) => set.add(t)));
+    return Array.from(set).sort();
   }, []);
 
-  const categories = useMemo(() => {
-    const unique = new Set<string>();
-    quotes.forEach((quote) => unique.add(quote.category));
-    return Array.from(unique).sort((a, b) => a.localeCompare(b));
-  }, [quotes]);
+  const filteredAthletes = useMemo(() => {
+    let list = [...athleteMindsets];
 
-  const filteredQuotes = useMemo(() => {
-    let filtered = [...quotes];
-
-    if (categoryFilter !== 'all') {
-      filtered = filtered.filter((quote) => quote.category === categoryFilter);
+    if (themeFilter !== 'all') {
+      list = list.filter((athlete) => athlete.themes.includes(themeFilter));
     }
 
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (quote) =>
-          quote.content.toLowerCase().includes(query) || quote.author.toLowerCase().includes(query)
+      list = list.filter((athlete) =>
+        [athlete.name, athlete.sport, athlete.headline, athlete.summary]
+          .join(' ')
+          .toLowerCase()
+          .includes(query)
       );
     }
 
-    filtered.sort((a, b) =>
-      sortOption === 'az'
-        ? a.author.localeCompare(b.author)
-        : b.author.localeCompare(a.author)
+    list.sort((a, b) =>
+      sortOption === 'az' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
     );
 
-    return filtered;
-  }, [quotes, categoryFilter, searchQuery, sortOption]);
+    return list;
+  }, [searchQuery, themeFilter, sortOption]);
 
-  const displayedQuotes = filteredQuotes.slice(0, displayCount);
-  const hasMore = displayCount < filteredQuotes.length;
-  const hasActiveFilters =
-    categoryFilter !== 'all' || sortOption !== 'az' || Boolean(searchQuery.trim());
+  const displayedAthletes = filteredAthletes.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredAthletes.length;
 
-  const handleFavoriteToggle = (quote: QuoteCardData) => {
-    setFavoriteIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(quote._id)) {
-        next.delete(quote._id);
-        removeFromFavorites(quote._id);
-        setToast({ open: true, message: 'Removed from favorites', severity: 'info' });
+  const favoritesCount = Object.keys(favorites).length;
+
+  const handleFavoriteToggle = (athlete: AthleteMindset) => {
+    setFavorites((prev) => {
+      const next = { ...prev };
+      if (next[athlete.slug]) {
+        delete next[athlete.slug];
+        setToast({ open: true, message: `${athlete.name} removed from favorites`, severity: 'info' });
       } else {
-        next.add(quote._id);
-        saveToFavorites({ _id: quote._id, content: quote.content, author: quote.author, tags: [quote.category] });
-        setToast({ open: true, message: 'Saved to favorites', severity: 'success' });
+        next[athlete.slug] = athlete;
+        setToast({ open: true, message: `${athlete.name} saved`, severity: 'success' });
       }
+      persistFavorites(next);
       return next;
     });
   };
 
-  const getShareUrl = (quote: QuoteCardData) => {
-    const slug = `${basePath}/athletes#${quote._id}`;
-    return `${window.location.origin}${slug}`;
-  };
+  const handleShare = (athlete: AthleteMindset, platform: SharePlatform) => {
+    const url = `${window.location.origin}/athletes/${athlete.slug}`;
+    const text = `${athlete.name}: ${athlete.headline}`;
 
-  const handleShare = (quote: QuoteCardData, platform: SharePlatform) => {
-    const url = getShareUrl(quote);
-
-    if (platform === 'native' && typeof navigator.share === 'function') {
+    if (platform === 'native' && navigator.share) {
       navigator
-        .share({
-          title: `${quote.author} on ${quote.category}`,
-          text: `“${quote.content}” — ${quote.author}`,
-          url,
-        })
+        .share({ title: athlete.name, text, url })
         .catch(() => setToast({ open: true, message: 'Share cancelled', severity: 'info' }));
       return;
     }
 
-    const text = encodeURIComponent(`“${quote.content}” — ${quote.author}`);
-    const encodedUrl = encodeURIComponent(url);
+    if (platform === 'copy') {
+      navigator.clipboard
+        .writeText(url)
+        .then(() => setToast({ open: true, message: 'Link copied', severity: 'success' }))
+        .catch(() => setToast({ open: true, message: 'Copy failed', severity: 'error' }));
+      return;
+    }
 
-    const shareTargets: Record<Exclude<SharePlatform, 'native'>, string | null> = {
-      twitter: `https://twitter.com/intent/tweet?text=${text}&url=${encodedUrl}`,
+    const encodedUrl = encodeURIComponent(url);
+    const encodedText = encodeURIComponent(text);
+
+    const target: Record<Exclude<SharePlatform, 'native'>, string | null> = {
+      twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
       instagram: null,
       copy: url,
     };
 
-    if (platform === 'copy') {
-      navigator.clipboard
-        .writeText(url)
-        .then(() => setToast({ open: true, message: 'Link copied to clipboard', severity: 'success' }))
-        .catch(() => setToast({ open: true, message: 'Copy failed. Try again.', severity: 'error' }));
-      return;
-    }
+    const shareUrl = target[platform as Exclude<SharePlatform, 'native'>];
 
-    const shareLink = shareTargets[platform === 'native' ? 'copy' : platform];
-
-    if (!shareLink) {
+    if (!shareUrl) {
       navigator.clipboard
         .writeText(url)
         .then(() =>
           setToast({
             open: true,
-            message: 'Instagram sharing is not supported directly. Link copied for you!',
+            message: 'Instagram sharing is manual—link copied for you!',
             severity: 'info',
           })
         )
-        .catch(() => setToast({ open: true, message: 'Copy failed. Try again.', severity: 'error' }));
+        .catch(() => setToast({ open: true, message: 'Copy failed', severity: 'error' }));
       return;
     }
 
-    window.open(shareLink, '_blank', 'noopener,noreferrer');
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
   };
 
   const handleLoadMore = useCallback(() => {
-    setDisplayCount((prev) => Math.min(prev + 12, filteredQuotes.length));
-  }, [filteredQuotes.length]);
+    setVisibleCount((prev) => Math.min(prev + 6, filteredAthletes.length));
+  }, [filteredAthletes.length]);
 
   useEffect(() => {
     const node = loadMoreRef.current;
@@ -433,113 +363,54 @@ export default function QuotesGalleryPage() {
           handleLoadMore();
         }
       },
-      { rootMargin: '240px 0px' }
+      { rootMargin: '200px 0px' }
     );
 
     observer.observe(node);
-
     return () => observer.disconnect();
   }, [handleLoadMore, hasMore]);
 
   const resetFilters = () => {
-    setCategoryFilter('all');
+    setThemeFilter('all');
     setSortOption('az');
     setSearchQuery('');
-    setDisplayCount(INITIAL_VISIBLE_CARDS);
+    setVisibleCount(INITIAL_VISIBLE);
   };
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
-    setDisplayCount(INITIAL_VISIBLE_CARDS);
+  const openRandomAthlete = () => {
+    if (filteredAthletes.length === 0) return;
+    const random = filteredAthletes[Math.floor(Math.random() * filteredAthletes.length)];
+    setSelectedAthlete(random);
+    setRandomOpen(true);
   };
 
-  const handleCategoryChange = (_: React.SyntheticEvent, value: string) => {
-    setCategoryFilter(value);
-    setDisplayCount(INITIAL_VISIBLE_CARDS);
-  };
-
-  const openRandomQuote = () => {
-    if (filteredQuotes.length === 0) return;
-    const random = filteredQuotes[Math.floor(Math.random() * filteredQuotes.length)];
-    setRandomQuote(random);
-    setRandomDialogOpen(true);
-  };
-
-  const highlightStats = useMemo(
-    () => [
-      { label: 'Quotes curated', value: quotes.length },
-      { label: 'Favorite inspirations', value: favoriteIds.size },
-      { label: 'Categories to explore', value: categories.length },
-    ],
-    [quotes.length, favoriteIds.size, categories.length]
-  );
-
-  const renderSkeleton = () => (
-    <>
-      <Box
-        sx={{
-          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(226, 231, 255, 0.7) 100%)',
-          py: { xs: 8, md: 12 },
-          borderRadius: { xs: 0, md: 0 },
-        }}
-      >
-        <Container maxWidth="xl">
-          <Skeleton variant="text" width={220} height={24} sx={{ mb: 2 }} />
-          <Skeleton variant="text" width="65%" height={56} sx={{ mb: 2 }} />
-          <Skeleton variant="text" width="40%" height={32} sx={{ mb: 6 }} />
-          <Stack direction="row" spacing={3} flexWrap="wrap">
-            {Array.from({ length: 3 }).map((_, index) => (
-              <Skeleton
-                key={index}
-                variant="rounded"
-                width={isMobile ? '100%' : 240}
-                height={120}
-                sx={{ borderRadius: 4 }}
-              />
-            ))}
-          </Stack>
-        </Container>
-      </Box>
-      <Container maxWidth="xl" sx={{ py: 6 }}>
-        <Grid container spacing={3}>
-          {Array.from({ length: 9 }).map((_, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <Skeleton variant="rounded" height={300} sx={{ borderRadius: 4 }} />
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-    </>
-  );
-
-  if (loading) {
-    return (
-      <>
-        <Navbar favoritesCount={favoriteIds.size} currentPage="home" onNavigate={() => {}} />
-        {renderSkeleton()}
-      </>
-    );
-  }
+  const heroStats = [
+    { label: 'Legends decoded', value: athleteMindsets.length },
+    { label: 'Mindset themes', value: themeOptions.length },
+    { label: 'Saved playbooks', value: favoritesCount },
+  ];
 
   return (
     <>
       <Head>
-        <title>Motivational Quotes Gallery</title>
-        <meta name="description" content="Discover inspirational quotes in a Pinterest-style gallery." />
+        <title>Athlete Mindset Playbooks</title>
+        <meta name="description" content="Borrow elite routines, rituals, and mental models from the world’s most resilient athletes." />
       </Head>
-      <Navbar favoritesCount={favoriteIds.size} currentPage="home" onNavigate={() => {}} />
-      <Container maxWidth="xl" sx={{ py: 4 }}>
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+      <Navbar favoritesCount={favoritesCount} currentPage="home" onNavigate={() => {}} />
+
+      <Container maxWidth="xl" sx={{ py: 5 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <Box
             sx={{
               position: 'relative',
-              mb: 5,
-              borderRadius: { xs: 4, md: 6 },
+              borderRadius: 5,
               px: { xs: 3, md: 6 },
               py: { xs: 5, md: 7 },
+              mb: 5,
               overflow: 'hidden',
-              background: 'linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%)',
-              boxShadow: '0 24px 60px rgba(120, 135, 182, 0.25)',
+              background: 'linear-gradient(135deg, rgba(76,81,191,0.14), rgba(118,75,162,0.18), rgba(244,114,182,0.1))',
+              border: '1px solid rgba(120, 130, 210, 0.32)',
+              boxShadow: '0 32px 65px rgba(95,105,180,0.25)',
             }}
           >
             <Box
@@ -547,19 +418,22 @@ export default function QuotesGalleryPage() {
                 position: 'absolute',
                 inset: 0,
                 background:
-                  'radial-gradient(circle at top left, rgba(255,255,255,0.8) 0%, transparent 50%), radial-gradient(circle at bottom right, rgba(209, 224, 255, 0.65) 0%, transparent 55%)',
+                  'radial-gradient(circle at top right, rgba(255,255,255,0.65), transparent 55%)',
               }}
             />
             <Stack spacing={3} sx={{ position: 'relative' }}>
-              <Typography variant="overline" sx={{ letterSpacing: 2, color: alpha(theme.palette.text.primary, 0.55) }}>
-                Curate your daily mantra
+              <Typography variant="overline" sx={{ letterSpacing: 2, color: alpha(theme.palette.text.primary, 0.6) }}>
+                Elite mindsets for everyday breakthroughs
               </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 800, lineHeight: 1.05, maxWidth: 720 }}>
-                Modern quotes, glassy vibes, instant inspiration
+              <Typography variant="h3" sx={{ fontWeight: 800, lineHeight: { xs: 1.1, md: 1.05 }, maxWidth: 720 }}>
+                Borrow routines, rituals, and mental models from sports icons
+              </Typography>
+              <Typography variant="body1" sx={{ color: alpha(theme.palette.text.primary, 0.72), maxWidth: 680 }}>
+                Scroll through glassy playbooks, filter by the mindset you need, save your favourites, and share the stories that move you.
               </Typography>
 
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 1 }}>
-                {highlightStats.map((stat) => (
+                {heroStats.map((stat) => (
                   <Box
                     key={stat.label}
                     sx={{
@@ -568,13 +442,13 @@ export default function QuotesGalleryPage() {
                       px: 3,
                       py: 2.5,
                       borderRadius: 4,
-                      backgroundColor: alpha('#f8f9ff', 0.55),
-                      border: '1px solid rgba(231, 234, 255, 0.7)',
+                      backgroundColor: alpha('#ffffff', 0.65),
                       backdropFilter: 'blur(18px)',
-                      boxShadow: '0 18px 35px rgba(152, 162, 199, 0.2)',
+                      border: '1px solid rgba(200, 210, 245, 0.6)',
+                      boxShadow: '0 18px 38px rgba(150, 160, 205, 0.22)',
                     }}
                   >
-                    <Typography variant="caption" sx={{ color: alpha(theme.palette.text.primary, 0.58), letterSpacing: 1 }}>
+                    <Typography variant="caption" sx={{ color: alpha(theme.palette.text.primary, 0.6), letterSpacing: 1 }}>
                       {stat.label}
                     </Typography>
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>
@@ -591,22 +465,24 @@ export default function QuotesGalleryPage() {
               sx={{
                 display: 'flex',
                 flexDirection: { xs: 'column', lg: 'row' },
-                alignItems: { xs: 'stretch', lg: 'center' },
                 gap: 2,
-                padding: { xs: 2.2, md: 2.6 },
+                padding: { xs: 2.2, md: 2.8 },
                 borderRadius: 4,
-                backgroundColor: alpha('#f8f9ff', 0.55),
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(220, 226, 248, 0.75)',
-                boxShadow: '0 24px 45px rgba(165, 175, 210, 0.25)',
+                backgroundColor: alpha('#f7f8ff', 0.6),
+                backdropFilter: 'blur(22px)',
+                border: '1px solid rgba(210, 216, 250, 0.6)',
+                boxShadow: '0 24px 48px rgba(170, 180, 225, 0.28)',
               }}
             >
               <TextField
                 fullWidth
                 variant="outlined"
-                placeholder="Search quotes or authors..."
+                placeholder="Search by athlete, sport, or mindset keyword..."
                 value={searchQuery}
-                onChange={handleSearchChange}
+                onChange={(event) => {
+                  setSearchQuery(event.target.value);
+                  setVisibleCount(INITIAL_VISIBLE);
+                }}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
@@ -617,64 +493,55 @@ export default function QuotesGalleryPage() {
                 sx={{
                   flex: 1,
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 30,
-                    backgroundColor: alpha('#ffffff', 0.7),
-                    backdropFilter: 'blur(18px)',
-                    boxShadow: '0 14px 35px rgba(150, 160, 200, 0.28)',
+                    borderRadius: 999,
+                    backgroundColor: alpha('#ffffff', 0.75),
                     '& fieldset': {
-                      border: '1px solid rgba(200, 210, 240, 0.65)',
+                      border: '1px solid rgba(210, 216, 250, 0.7)',
                     },
                     '&:hover fieldset': {
-                      borderColor: alpha(theme.palette.primary.main, 0.5),
+                      borderColor: alpha(theme.palette.primary.main, 0.65),
                     },
                     '&.Mui-focused fieldset': {
                       borderColor: theme.palette.primary.main,
                     },
                   },
                 }}
-                aria-label="Search quotes"
+                aria-label="Search athletes"
               />
 
-              <Stack
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={1.5}
-                alignItems="center"
-                justifyContent="flex-end"
-              >
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ xs: 'stretch', sm: 'center' }} justifyContent="flex-end">
                 <ToggleButtonGroup
                   value={sortOption}
                   exclusive
-                  onChange={(_, newValue) => {
-                    if (newValue) {
-                      setSortOption(newValue);
-                      setDisplayCount(INITIAL_VISIBLE_CARDS);
+                  onChange={(_, value) => {
+                    if (value) {
+                      setSortOption(value);
+                      setVisibleCount(INITIAL_VISIBLE);
                     }
                   }}
                   size="small"
+                  aria-label="Sort athletes"
                   sx={{
-                    backgroundColor: alpha('#ffffff', 0.55),
+                    backgroundColor: alpha('#ffffff', 0.65),
                     borderRadius: 999,
-                    backdropFilter: 'blur(18px)',
-                    border: '1px solid rgba(220, 226, 248, 0.6)',
+                    border: '1px solid rgba(205, 212, 248, 0.65)',
                     '& .MuiToggleButton-root': {
-                      px: 2,
                       borderRadius: 999,
+                      px: 2.5,
                       textTransform: 'none',
                       fontWeight: 600,
-                      transition: 'all 0.2s ease',
                     },
                     '& .Mui-selected': {
-                      background: 'linear-gradient(135deg, rgba(102,126,234,0.85), rgba(118,75,162,0.85))',
+                      background: 'linear-gradient(135deg, rgba(118,75,162,0.85), rgba(102,126,234,0.85))',
                       color: '#fff',
-                      boxShadow: '0 10px 20px rgba(118,75,162,0.25)',
+                      boxShadow: '0 12px 24px rgba(102,126,234,0.28)',
                     },
                   }}
-                  aria-label="Sort quotes"
                 >
-                  <ToggleButton value="az" aria-label="Author A to Z">
+                  <ToggleButton value="az" aria-label="A to Z">
                     <Sort sx={{ fontSize: 18, mr: 0.5 }} /> A–Z
                   </ToggleButton>
-                  <ToggleButton value="za" aria-label="Author Z to A">
+                  <ToggleButton value="za" aria-label="Z to A">
                     <Sort sx={{ fontSize: 18, mr: 0.5, transform: 'scaleX(-1)' }} /> Z–A
                   </ToggleButton>
                 </ToggleButtonGroup>
@@ -683,21 +550,20 @@ export default function QuotesGalleryPage() {
                   variant="contained"
                   startIcon={<RestartAlt />}
                   onClick={resetFilters}
-                  disabled={!hasActiveFilters}
+                  disabled={themeFilter === 'all' && sortOption === 'az' && !searchQuery}
                   sx={{
                     borderRadius: 999,
-                    px: 2.5,
-                    py: 1,
+                    px: 3,
                     textTransform: 'none',
                     fontWeight: 600,
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.8), rgba(229,233,255,0.95))',
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.85), rgba(229,233,255,0.95))',
                     color: theme.palette.text.primary,
-                    boxShadow: '0 14px 28px rgba(165, 175, 210, 0.35)',
+                    boxShadow: '0 18px 32px rgba(160, 170, 215, 0.35)',
                     '&:hover': {
-                      background: 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(215,223,255,1))',
+                      background: 'linear-gradient(135deg, rgba(255,255,255,0.92), rgba(215,222,255,1))',
                     },
                     '&.Mui-disabled': {
-                      opacity: 0.5,
+                      opacity: 0.45,
                     },
                   }}
                 >
@@ -708,8 +574,8 @@ export default function QuotesGalleryPage() {
 
             <Box
               sx={{
-                display: 'flex',
                 overflowX: 'auto',
+                display: 'flex',
                 gap: 1,
                 pb: 0.5,
                 '&::-webkit-scrollbar': { height: 6 },
@@ -720,35 +586,38 @@ export default function QuotesGalleryPage() {
               }}
             >
               <ToggleButtonGroup
-                value={categoryFilter}
+                value={themeFilter}
                 exclusive
-                onChange={handleCategoryChange}
+                onChange={(_, value) => {
+                  if (value !== null) {
+                    setThemeFilter(value);
+                    setVisibleCount(INITIAL_VISIBLE);
+                  }
+                }}
                 size={isMobile ? 'small' : 'medium'}
-                aria-label="Filter quotes by category"
+                aria-label="Mindset theme"
                 sx={{
-                  backgroundColor: alpha('#ffffff', 0.55),
+                  backgroundColor: alpha('#ffffff', 0.65),
                   borderRadius: 999,
-                  backdropFilter: 'blur(18px)',
-                  border: '1px solid rgba(220, 226, 248, 0.6)',
+                  border: '1px solid rgba(210, 216, 250, 0.65)',
                   '& .MuiToggleButton-root': {
                     borderRadius: 999,
                     textTransform: 'capitalize',
                     px: 2.5,
-                    transition: 'all 0.2s ease',
                   },
                   '& .Mui-selected': {
-                    background: 'linear-gradient(135deg, rgba(118,75,162,0.85), rgba(102,126,234,0.85))',
+                    background: 'linear-gradient(135deg, rgba(76,81,191,0.85), rgba(118,75,162,0.85))',
                     color: '#fff',
-                    boxShadow: '0 12px 24px rgba(102,126,234,0.28)',
+                    boxShadow: '0 12px 24px rgba(90,100,190,0.28)',
                   },
                 }}
               >
                 <ToggleButton value="all">
-                  <FilterList sx={{ fontSize: 18, mr: 1 }} /> All
+                  All focuses
                 </ToggleButton>
-                {categories.map((category) => (
-                  <ToggleButton key={category} value={category}>
-                    {category}
+                {themeOptions.map((themeKey) => (
+                  <ToggleButton key={themeKey} value={themeKey}>
+                    {themeLabel(themeKey)}
                   </ToggleButton>
                 ))}
               </ToggleButtonGroup>
@@ -756,18 +625,21 @@ export default function QuotesGalleryPage() {
           </Stack>
 
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Showing {displayedQuotes.length} of {filteredQuotes.length} quotes
+            Showing {displayedAthletes.length} of {filteredAthletes.length} mindset playbooks
           </Typography>
 
           <Grid container spacing={3}>
             <AnimatePresence>
-              {displayedQuotes.map((quote) => (
-                <Grid item xs={12} sm={6} md={4} key={quote._id} sx={{ display: 'flex' }}>
-                  <QuoteCard
-                    quote={quote}
-                    isFavorite={favoriteIds.has(quote._id)}
+              {displayedAthletes.map((athlete) => (
+                <Grid item xs={12} sm={6} md={4} key={athlete.slug} sx={{ display: 'flex' }}>
+                  <AthleteCard
+                    athlete={athlete}
+                    onSelect={(a) => {
+                      setSelectedAthlete(a);
+                      setRandomOpen(false);
+                    }}
+                    isFavorite={Boolean(favorites[athlete.slug])}
                     onFavoriteToggle={handleFavoriteToggle}
-                    onShare={handleShare}
                   />
                 </Grid>
               ))}
@@ -780,49 +652,54 @@ export default function QuotesGalleryPage() {
                 variant="outlined"
                 startIcon={<ShareIcon sx={{ transform: 'rotate(90deg)' }} />}
                 onClick={handleLoadMore}
-                sx={{ borderRadius: 999, px: 4 }}
+                sx={{
+                  borderRadius: 999,
+                  px: 4,
+                  textTransform: 'none',
+                  fontWeight: 600,
+                }}
               >
-                Load More Quotes
+                Load more mindsets
               </Button>
             </Box>
           )}
 
-          {!hasMore && filteredQuotes.length > 0 && (
+          {!hasMore && filteredAthletes.length > 0 && (
             <Typography variant="body2" color="text.secondary" sx={{ mt: 4, textAlign: 'center' }}>
-              You’ve reached the end. Save your favorites or tap the star button for a surprise inspiration.
+              End of the wall—tap the spark icon for a random mentor.
             </Typography>
           )}
 
-          {filteredQuotes.length === 0 && (
+          {filteredAthletes.length === 0 && (
             <Box
               sx={{
                 textAlign: 'center',
                 py: 8,
                 borderRadius: 4,
-                backgroundColor: alpha(theme.palette.primary.main, 0.05),
+                backgroundColor: alpha(theme.palette.primary.main, 0.07),
               }}
             >
               <Typography variant="h6" sx={{ mb: 1 }}>
-                No quotes match that… yet.
+                No playbooks match that filter yet.
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                Try adjusting your filters or search term to uncover more inspiration.
+                Reset your filters or try searching by a different quality—resilience, leadership, calm.
               </Typography>
             </Box>
           )}
         </motion.div>
       </Container>
 
-      <Tooltip title="Inspire me" placement="left">
+      <Tooltip title="Surprise me with a mindset" placement="left">
         <Fab
           color="primary"
           size="large"
-          onClick={openRandomQuote}
+          onClick={openRandomAthlete}
           sx={{
             position: 'fixed',
             bottom: 24,
             right: 24,
-            boxShadow: '0 18px 45px rgba(102, 126, 234, 0.35)',
+            boxShadow: '0 22px 45px rgba(102,126,234,0.35)',
           }}
         >
           <AutoAwesome />
@@ -830,70 +707,136 @@ export default function QuotesGalleryPage() {
       </Tooltip>
 
       <Dialog
-        open={randomDialogOpen && Boolean(randomQuote)}
-        onClose={() => setRandomDialogOpen(false)}
-        maxWidth="sm"
+        open={Boolean(selectedAthlete)}
+        onClose={() => setSelectedAthlete(null)}
+        maxWidth="md"
         fullWidth
         PaperProps={{
           sx: {
-            borderRadius: 4,
-            padding: 3,
-            boxShadow: '0 32px 80px rgba(99, 132, 255, 0.32)',
-            position: 'relative',
+            borderRadius: 5,
             overflow: 'hidden',
+            backdropFilter: 'blur(24px)',
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.92), rgba(236,240,255,0.95))',
+            border: '1px solid rgba(205, 212, 248, 0.6)',
+            boxShadow: '0 40px 88px rgba(100,110,190,0.28)',
           },
         }}
       >
-        <IconButton
-          onClick={() => setRandomDialogOpen(false)}
-          sx={{ position: 'absolute', top: 16, right: 16 }}
-          aria-label="Close random quote"
-        >
-          <Close />
-        </IconButton>
-
-        {randomQuote && (
+        {selectedAthlete && (
           <>
-            <DialogTitle sx={{ fontWeight: 700, textTransform: 'capitalize' }}>
-              {randomQuote.category} inspiration
-            </DialogTitle>
-            <DialogContent>
-              <Typography
-                variant="h5"
-                sx={{ fontStyle: 'italic', lineHeight: 1.7, mb: 3 }}
+            <Box sx={{ position: 'relative', width: '100%', pt: '40%' }}>
+              <Box
+                component="img"
+                src={selectedAthlete.image}
+                alt={selectedAthlete.name}
+                sx={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+              <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(5,5,15,0.0) 0%, rgba(5,8,30,0.65) 100%)' }} />
+              <IconButton
+                onClick={() => setSelectedAthlete(null)}
+                sx={{ position: 'absolute', top: 16, right: 16, color: '#fff', backgroundColor: alpha('#000', 0.3) }}
               >
-                “{randomQuote.content}”
+                <Close />
+              </IconButton>
+              <Stack direction="row" spacing={2} sx={{ position: 'absolute', bottom: 24, left: 24, alignItems: 'center' }}>
+                <Avatar src={selectedAthlete.image} alt={selectedAthlete.name} sx={{ border: '2px solid rgba(255,255,255,0.7)' }} />
+                <Box>
+                  <Typography variant="h5" sx={{ fontWeight: 700, color: '#fff' }}>
+                    {selectedAthlete.name}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
+                    {selectedAthlete.sport} · {selectedAthlete.country}
+                  </Typography>
+                </Box>
+              </Stack>
+            </Box>
+
+            <DialogContent sx={{ pt: 4, pb: 1 }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>
+                {selectedAthlete.headline}
               </Typography>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-                — {randomQuote.author}
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                {selectedAthlete.summary}
               </Typography>
+
+              <Stack spacing={3}>
+                <Box>
+                  <Typography variant="overline" sx={{ letterSpacing: 1.2 }}>
+                    Defining moment
+                  </Typography>
+                  <Typography variant="body1" sx={{ mt: 1.2, lineHeight: 1.7 }}>
+                    {selectedAthlete.signatureMoment}
+                  </Typography>
+                </Box>
+
+                <Box>
+                  <Typography variant="overline" sx={{ letterSpacing: 1.2 }}>
+                    Mindset codes
+                  </Typography>
+                  <Stack component="ul" spacing={1.2} sx={{ mt: 1.2, pl: 2, '& li': { lineHeight: 1.6 } }}>
+                    {selectedAthlete.mindsets.map((item) => (
+                      <Typography component="li" variant="body2" key={item}>
+                          {item}
+                      </Typography>
+                    ))}
+                  </Stack>
+                </Box>
+
+                <Box>
+                  <Typography variant="overline" sx={{ letterSpacing: 1.2 }}>
+                    Daily habits to steal
+                  </Typography>
+                  <Stack component="ul" spacing={1.2} sx={{ mt: 1.2, pl: 2 }}>
+                    {selectedAthlete.dailyHabits.map((item) => (
+                      <Typography component="li" variant="body2" key={item}>
+                        {item}
+                      </Typography>
+                    ))}
+                  </Stack>
+                </Box>
+
+                <Box>
+                  <Typography variant="overline" sx={{ letterSpacing: 1.2 }}>
+                    Bring it into your life
+                  </Typography>
+                  <Stack component="ul" spacing={1.2} sx={{ mt: 1.2, pl: 2 }}>
+                    {selectedAthlete.transferToLife.map((item) => (
+                      <Typography component="li" variant="body2" key={item}>
+                        {item}
+                      </Typography>
+                    ))}
+                  </Stack>
+                </Box>
+              </Stack>
             </DialogContent>
+
             <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 3 }}>
               <Stack direction="row" spacing={1.5}>
                 <Button
                   variant="contained"
-                  startIcon={<FavoriteIcon />}
-                  onClick={() => {
-                    handleFavoriteToggle(randomQuote);
-                    setRandomDialogOpen(false);
-                  }}
+                  startIcon={favorites[selectedAthlete.slug] ? <FavoriteIcon /> : <FavoriteBorder />}
+                  onClick={() => handleFavoriteToggle(selectedAthlete)}
+                  sx={{ borderRadius: 999, textTransform: 'none', fontWeight: 600 }}
                 >
-                  Save Quote
+                  {favorites[selectedAthlete.slug] ? 'Saved' : 'Save playbook'}
                 </Button>
                 <Button
                   variant="outlined"
                   startIcon={<ShareIcon />}
                   onClick={() =>
                     handleShare(
-                      randomQuote,
-                      typeof navigator.share === 'function' ? 'native' : 'twitter'
+                      selectedAthlete,
+                      typeof navigator !== 'undefined' && typeof navigator.share === 'function'
+                        ? 'native'
+                        : 'twitter'
                     )
                   }
+                  sx={{ borderRadius: 999, textTransform: 'none', fontWeight: 600 }}
                 >
-                  Share
+                  Share insight
                 </Button>
               </Stack>
-              <Button onClick={() => setRandomDialogOpen(false)} startIcon={<ArrowOutward />}>
+              <Button onClick={() => setSelectedAthlete(null)} startIcon={<ArrowOutward />} sx={{ textTransform: 'none', fontWeight: 600 }}>
                 Close
               </Button>
             </DialogActions>
@@ -910,8 +853,12 @@ export default function QuotesGalleryPage() {
         <Alert
           severity={toast.severity}
           variant="filled"
+          iconMapping={{
+            success: <FavoriteIcon fontSize="small" />,
+            info: <ShareIcon fontSize="small" />,
+            error: <ContentCopy fontSize="small" />,
+          }}
           sx={{ borderRadius: 3 }}
-          onClose={() => setToast((prev) => ({ ...prev, open: false }))}
         >
           {toast.message}
         </Alert>

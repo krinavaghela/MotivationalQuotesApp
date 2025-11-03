@@ -1,127 +1,224 @@
-import React, { useState, useEffect } from 'react';
+'use client';
+
+import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-import AthleteDetail from '@/components/AthleteDetail';
+import {
+  Alert,
+  Avatar,
+  Box,
+  Breadcrumbs,
+  Button,
+  Chip,
+  Container,
+  Divider,
+  IconButton,
+  Stack,
+  Typography,
+} from '@mui/material';
+import { alpha } from '@mui/material/styles';
+import { ArrowBack, Favorite, Share as ShareIcon } from '@mui/icons-material';
+
+import { athleteMindsets, AthleteMindset } from '@/lib/athletesMindset';
 import Navbar from '@/components/Navbar';
-import { Box, CircularProgress, Typography } from '@mui/material';
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
+const STORAGE_KEY = 'athleteMindsetFavorites';
 
-interface AthleteDetailData {
-  slug: string;
-  name: string;
-  headline: string;
-  excerpt: string;
-  thumbnail: string;
-  youtube: string;
-  youtubeId: string;
-  story: string;
-  practice: string[];
-  sources: Array<{
-    title: string;
-    url: string;
-    publisher: string;
-    date: string;
-  }>;
-}
+const getFavorites = () => {
+  if (typeof window === 'undefined') return {} as Record<string, AthleteMindset>;
+  try {
+    return JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? '{}') as Record<string, AthleteMindset>;
+  } catch (error) {
+    return {} as Record<string, AthleteMindset>;
+  }
+};
 
 export default function AthleteDetailPage() {
   const router = useRouter();
   const { slug } = router.query;
-  const [athlete, setAthlete] = useState<AthleteDetailData | null>(null);
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (slug) {
-      loadAthlete(slug as string);
-      loadFavorites();
-    }
-  }, [slug]);
+  const athlete = useMemo(() => athleteMindsets.find((item) => item.slug === slug), [slug]);
 
-  const loadAthlete = async (athleteSlug: string) => {
-    try {
-      const response = await fetch(`${basePath}/data/athletes.json`);
-      const data = await response.json();
-      const found = data.find((a: AthleteDetailData) => a.slug === athleteSlug);
-      if (found) {
-        setAthlete(found);
-      }
-    } catch (error) {
-      console.error('Error loading athlete:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadFavorites = () => {
-    try {
-      const stored = localStorage.getItem('athleteFavorites');
-      if (stored) {
-        setFavorites(JSON.parse(stored));
-      }
-    } catch (error) {
-      console.error('Error loading favorites:', error);
-    }
-  };
-
-  const handleBack = () => {
-    router.push(`${basePath}/athletes`);
-  };
-
-  const handleFavorite = (athlete: AthleteDetailData) => {
-    const updated = favorites.includes(athlete.slug)
-      ? favorites.filter((f) => f !== athlete.slug)
-      : [...favorites, athlete.slug];
-    setFavorites(updated);
-    localStorage.setItem('athleteFavorites', JSON.stringify(updated));
-  };
-
-  const handleNavigate = (page: 'home' | 'favorites' | 'settings') => {
-    if (page === 'home') {
-      router.push(`${basePath}/`);
-    } else if (page === 'favorites') {
-      router.push(`${basePath}/`);
-    } else if (page === 'settings') {
-      router.push(`${basePath}/`);
-    }
-  };
-
-  if (loading) {
-    return (
-      <>
-        <Navbar favoritesCount={0} currentPage="home" onNavigate={handleNavigate} />
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-          <CircularProgress />
-        </Box>
-      </>
-    );
-  }
+  const [favorites, setFavorites] = useState<Record<string, AthleteMindset>>(() => getFavorites());
 
   if (!athlete) {
     return (
-      <>
-        <Navbar favoritesCount={0} currentPage="home" onNavigate={handleNavigate} />
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-          <Typography variant="h5">Athlete not found</Typography>
-        </Box>
-      </>
+      <Container sx={{ py: 10 }}>
+        <Alert severity="warning">Athlete mindset not found.</Alert>
+      </Container>
     );
   }
+
+  const isFavorite = Boolean(favorites[athlete.slug]);
+  const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/athletes/${athlete.slug}`;
 
   return (
     <>
       <Head>
-        <title>{athlete.name} - Daily Motivation</title>
-        <meta name="description" content={athlete.excerpt} />
+        <title>{athlete.name} · Athlete Mindset Playbook</title>
+        <meta name="description" content={athlete.summary} />
       </Head>
-      <Navbar favoritesCount={0} currentPage="home" onNavigate={handleNavigate} />
-      <AthleteDetail
-        athlete={athlete}
-        onBack={handleBack}
-        onFavorite={handleFavorite}
-        isFavorite={favorites.includes(athlete.slug)}
-      />
+      <Navbar favoritesCount={Object.keys(favorites).length} currentPage="home" onNavigate={() => router.push('/')} />
+      <Container maxWidth="md" sx={{ py: 6 }}>
+        <Breadcrumbs sx={{ mb: 2 }}>
+          <Button
+            startIcon={<ArrowBack />}
+            onClick={() => router.push('/athletes')}
+            sx={{ textTransform: 'none', fontWeight: 600 }}
+          >
+            Back to athletes
+          </Button>
+        </Breadcrumbs>
+
+        <Box
+          sx={{
+            position: 'relative',
+            borderRadius: 5,
+            overflow: 'hidden',
+            mb: 4,
+            height: { xs: 280, md: 360 },
+          }}
+        >
+          <Box
+            component="img"
+            src={athlete.image}
+            alt={athlete.name}
+            sx={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+          <Box
+            sx={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(180deg, rgba(6,9,25,0.05) 0%, rgba(6,8,24,0.72) 100%)',
+            }}
+          />
+          <Stack direction="row" spacing={2} sx={{ position: 'absolute', bottom: 24, left: 24, alignItems: 'center' }}>
+            <Avatar src={athlete.image} alt={athlete.name} sx={{ width: 64, height: 64, border: '2px solid rgba(255,255,255,0.7)' }} />
+            <Box>
+              <Typography variant="h4" sx={{ fontWeight: 800, color: '#fff' }}>
+                {athlete.name}
+              </Typography>
+              <Typography variant="body2" sx={{ color: alpha('#fff', 0.8) }}>
+                {athlete.sport} · {athlete.country}
+              </Typography>
+            </Box>
+          </Stack>
+        </Box>
+
+        <Stack spacing={3}>
+          <Box>
+            <Typography variant="overline" sx={{ letterSpacing: 1.2 }}>
+              Headline
+            </Typography>
+            <Typography variant="h5" sx={{ fontWeight: 700, mt: 1 }}>
+              {athlete.headline}
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mt: 1.5, lineHeight: 1.7 }}>
+              {athlete.summary}
+            </Typography>
+          </Box>
+
+          <Stack direction="row" spacing={1} flexWrap="wrap">
+            {athlete.themes.map((theme) => (
+              <Chip key={theme} label={theme.replace(/-/g, ' ')} sx={{ borderRadius: 999 }} />
+            ))}
+          </Stack>
+
+          <Box>
+            <Typography variant="overline" sx={{ letterSpacing: 1.2 }}>
+              Defining moment
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 1.2, lineHeight: 1.7 }}>
+              {athlete.signatureMoment}
+            </Typography>
+          </Box>
+
+          <Divider />
+
+          <Box>
+            <Typography variant="overline" sx={{ letterSpacing: 1.2 }}>
+              Mindset codes
+            </Typography>
+            <Stack component="ul" spacing={1.2} sx={{ mt: 1.2, pl: 2 }}>
+              {athlete.mindsets.map((item) => (
+                <Typography component="li" variant="body2" key={item}>
+                  {item}
+                </Typography>
+              ))}
+            </Stack>
+          </Box>
+
+          <Box>
+            <Typography variant="overline" sx={{ letterSpacing: 1.2 }}>
+              Daily habits to copy
+            </Typography>
+            <Stack component="ul" spacing={1.2} sx={{ mt: 1.2, pl: 2 }}>
+              {athlete.dailyHabits.map((item) => (
+                <Typography component="li" variant="body2" key={item}>
+                  {item}
+                </Typography>
+              ))}
+            </Stack>
+          </Box>
+
+          <Box>
+            <Typography variant="overline" sx={{ letterSpacing: 1.2 }}>
+              Apply it in your life
+            </Typography>
+            <Stack component="ul" spacing={1.2} sx={{ mt: 1.2, pl: 2 }}>
+              {athlete.transferToLife.map((item) => (
+                <Typography component="li" variant="body2" key={item}>
+                  {item}
+                </Typography>
+              ))}
+            </Stack>
+          </Box>
+        </Stack>
+
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 4 }}>
+          <Button
+            variant="contained"
+            startIcon={<Favorite />}
+            onClick={() => {
+              setFavorites((prev) => {
+                const next = { ...prev };
+                if (next[athlete.slug]) {
+                  delete next[athlete.slug];
+                } else {
+                  next[athlete.slug] = athlete;
+                }
+                if (typeof window !== 'undefined') {
+                  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+                }
+                return next;
+              });
+            }}
+            sx={{ borderRadius: 999, textTransform: 'none', fontWeight: 600 }}
+          >
+            {isFavorite ? 'Saved to your playbooks' : 'Save this playbook'}
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<ShareIcon />}
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({ title: athlete.name, text: athlete.headline, url: shareUrl });
+              } else {
+                navigator.clipboard.writeText(shareUrl);
+              }
+            }}
+            sx={{ borderRadius: 999, textTransform: 'none', fontWeight: 600 }}
+          >
+            Share mindset
+          </Button>
+        </Stack>
+
+        {athlete.reference && (
+          <Alert severity="info" sx={{ mt: 4 }}>
+            Inspired by: {athlete.reference}
+          </Alert>
+        )}
+      </Container>
     </>
   );
 }

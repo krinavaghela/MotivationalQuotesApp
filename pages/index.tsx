@@ -12,7 +12,7 @@ import {
   FormControlLabel,
   Button,
 } from '@mui/material';
-import { Favorite, Settings, Brightness4, Brightness7 } from '@mui/icons-material';
+import { Favorite, Settings, Brightness4, Brightness7, ArrowOutward } from '@mui/icons-material';
 import Head from 'next/head';
 import { motion } from 'framer-motion';
 import { useTheme } from '@mui/material/styles';
@@ -188,12 +188,31 @@ export default function Home() {
               {/* Athletes Link */}
               <Box sx={{ textAlign: 'center', mb: 6 }}>
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   size="large"
                   onClick={() => window.location.href = `${basePath}/athletes`}
-                  sx={{ borderRadius: 3, px: 4 }}
+                  sx={{
+                    borderRadius: 999,
+                    px: { xs: 4, md: 6 },
+                    py: 1.6,
+                    fontSize: '1rem',
+                    fontWeight: 700,
+                    textTransform: 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    background: 'linear-gradient(135deg, rgba(102,126,234,0.85), rgba(118,75,162,0.9))',
+                    boxShadow: '0 20px 40px rgba(102,126,234,0.35)',
+                    border: '1px solid rgba(255,255,255,0.35)',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, rgba(102,126,234,0.95), rgba(118,75,162,0.98))',
+                      boxShadow: '0 24px 50px rgba(102,126,234,0.4)',
+                    },
+                  }}
                 >
-                  💪 Athletes & Mindset Stories →
+                  <span role="img" aria-label="flexed biceps">💪</span>
+                  Athletes & Mindset Playbooks
+                  <ArrowOutward sx={{ fontSize: 20 }} />
                 </Button>
               </Box>
 
