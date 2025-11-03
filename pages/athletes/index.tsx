@@ -550,18 +550,15 @@ export default function QuotesGalleryPage() {
                   'radial-gradient(circle at top left, rgba(255,255,255,0.8) 0%, transparent 50%), radial-gradient(circle at bottom right, rgba(209, 224, 255, 0.65) 0%, transparent 55%)',
               }}
             />
-            <Stack spacing={2} sx={{ position: 'relative' }}>
-              <Typography variant="overline" sx={{ letterSpacing: 2, color: alpha(theme.palette.text.primary, 0.6) }}>
-                Motivation Playground
+            <Stack spacing={3} sx={{ position: 'relative' }}>
+              <Typography variant="overline" sx={{ letterSpacing: 2, color: alpha(theme.palette.text.primary, 0.55) }}>
+                Curate your daily mantra
               </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 800, lineHeight: 1.1, maxWidth: 720 }}>
-                Pinterest-inspired quote wall for daily sparks of courage and calm
-              </Typography>
-              <Typography variant="body1" sx={{ maxWidth: 680, color: alpha(theme.palette.text.primary, 0.75) }}>
-                Browse curated perspectives on success, mindfulness, growth, and more. Save what resonates, share what inspires, and let a random quote surprise you when you need it most.
+              <Typography variant="h3" sx={{ fontWeight: 800, lineHeight: 1.05, maxWidth: 720 }}>
+                Modern quotes, glassy vibes, instant inspiration
               </Typography>
 
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 2 }}>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 1 }}>
                 {highlightStats.map((stat) => (
                   <Box
                     key={stat.label}
@@ -571,12 +568,13 @@ export default function QuotesGalleryPage() {
                       px: 3,
                       py: 2.5,
                       borderRadius: 4,
-                      backgroundColor: alpha('#ffffff', 0.75),
-                      border: '1px solid rgba(231, 235, 250, 0.7)',
-                      boxShadow: '0 12px 25px rgba(152, 162, 199, 0.2)',
+                      backgroundColor: alpha('#f8f9ff', 0.55),
+                      border: '1px solid rgba(231, 234, 255, 0.7)',
+                      backdropFilter: 'blur(18px)',
+                      boxShadow: '0 18px 35px rgba(152, 162, 199, 0.2)',
                     }}
                   >
-                    <Typography variant="caption" sx={{ color: alpha(theme.palette.text.primary, 0.6), letterSpacing: 1 }}>
+                    <Typography variant="caption" sx={{ color: alpha(theme.palette.text.primary, 0.58), letterSpacing: 1 }}>
                       {stat.label}
                     </Typography>
                     <Typography variant="h5" sx={{ fontWeight: 700 }}>
@@ -588,8 +586,21 @@ export default function QuotesGalleryPage() {
             </Stack>
           </Box>
 
-          <Stack spacing={2} sx={{ mb: 4 }}>
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems={{ xs: 'stretch', md: 'center' }}>
+          <Stack spacing={2.5} sx={{ mb: 4 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column', lg: 'row' },
+                alignItems: { xs: 'stretch', lg: 'center' },
+                gap: 2,
+                padding: { xs: 2.2, md: 2.6 },
+                borderRadius: 4,
+                backgroundColor: alpha('#f8f9ff', 0.55),
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(220, 226, 248, 0.75)',
+                boxShadow: '0 24px 45px rgba(165, 175, 210, 0.25)',
+              }}
+            >
               <TextField
                 fullWidth
                 variant="outlined"
@@ -606,13 +617,30 @@ export default function QuotesGalleryPage() {
                 sx={{
                   flex: 1,
                   '& .MuiOutlinedInput-root': {
-                    borderRadius: 3,
+                    borderRadius: 30,
+                    backgroundColor: alpha('#ffffff', 0.7),
+                    backdropFilter: 'blur(18px)',
+                    boxShadow: '0 14px 35px rgba(150, 160, 200, 0.28)',
+                    '& fieldset': {
+                      border: '1px solid rgba(200, 210, 240, 0.65)',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: alpha(theme.palette.primary.main, 0.5),
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: theme.palette.primary.main,
+                    },
                   },
                 }}
                 aria-label="Search quotes"
               />
 
-              <Stack direction="row" spacing={1.5} alignItems="center">
+              <Stack
+                direction={{ xs: 'column', sm: 'row' }}
+                spacing={1.5}
+                alignItems="center"
+                justifyContent="flex-end"
+              >
                 <ToggleButtonGroup
                   value={sortOption}
                   exclusive
@@ -624,11 +652,21 @@ export default function QuotesGalleryPage() {
                   }}
                   size="small"
                   sx={{
+                    backgroundColor: alpha('#ffffff', 0.55),
+                    borderRadius: 999,
+                    backdropFilter: 'blur(18px)',
+                    border: '1px solid rgba(220, 226, 248, 0.6)',
                     '& .MuiToggleButton-root': {
                       px: 2,
-                      borderRadius: 2,
+                      borderRadius: 999,
                       textTransform: 'none',
                       fontWeight: 600,
+                      transition: 'all 0.2s ease',
+                    },
+                    '& .Mui-selected': {
+                      background: 'linear-gradient(135deg, rgba(102,126,234,0.85), rgba(118,75,162,0.85))',
+                      color: '#fff',
+                      boxShadow: '0 10px 20px rgba(118,75,162,0.25)',
                     },
                   }}
                   aria-label="Sort quotes"
@@ -642,25 +680,41 @@ export default function QuotesGalleryPage() {
                 </ToggleButtonGroup>
 
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   startIcon={<RestartAlt />}
                   onClick={resetFilters}
                   disabled={!hasActiveFilters}
-                  sx={{ borderRadius: 2, whiteSpace: 'nowrap' }}
+                  sx={{
+                    borderRadius: 999,
+                    px: 2.5,
+                    py: 1,
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.8), rgba(229,233,255,0.95))',
+                    color: theme.palette.text.primary,
+                    boxShadow: '0 14px 28px rgba(165, 175, 210, 0.35)',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, rgba(255,255,255,0.9), rgba(215,223,255,1))',
+                    },
+                    '&.Mui-disabled': {
+                      opacity: 0.5,
+                    },
+                  }}
                 >
                   Reset
                 </Button>
               </Stack>
-            </Stack>
+            </Box>
 
             <Box
               sx={{
                 display: 'flex',
                 overflowX: 'auto',
+                gap: 1,
                 pb: 0.5,
                 '&::-webkit-scrollbar': { height: 6 },
                 '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: alpha(theme.palette.divider, 0.6),
+                  backgroundColor: alpha(theme.palette.primary.main, 0.3),
                   borderRadius: 999,
                 },
               }}
@@ -672,10 +726,20 @@ export default function QuotesGalleryPage() {
                 size={isMobile ? 'small' : 'medium'}
                 aria-label="Filter quotes by category"
                 sx={{
+                  backgroundColor: alpha('#ffffff', 0.55),
+                  borderRadius: 999,
+                  backdropFilter: 'blur(18px)',
+                  border: '1px solid rgba(220, 226, 248, 0.6)',
                   '& .MuiToggleButton-root': {
                     borderRadius: 999,
                     textTransform: 'capitalize',
                     px: 2.5,
+                    transition: 'all 0.2s ease',
+                  },
+                  '& .Mui-selected': {
+                    background: 'linear-gradient(135deg, rgba(118,75,162,0.85), rgba(102,126,234,0.85))',
+                    color: '#fff',
+                    boxShadow: '0 12px 24px rgba(102,126,234,0.28)',
                   },
                 }}
               >
