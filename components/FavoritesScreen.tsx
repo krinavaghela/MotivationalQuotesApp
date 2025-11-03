@@ -119,7 +119,7 @@ const FavoritesScreen: React.FC<FavoritesScreenProps> = ({
                           overflow: 'hidden',
                         }}
                       >
-                        "{quote.content}"
+                        &quot;{quote.content}&quot;
                       </Typography>
 
                       {/* Author */}

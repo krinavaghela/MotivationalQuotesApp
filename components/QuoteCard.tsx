@@ -96,7 +96,7 @@ const QuoteCard: React.FC<QuoteCardProps> = ({
           {/* Quote Icon */}
           <Box sx={{ mb: 3, display: 'flex', justifyContent: 'center' }}>
             <Typography variant="h1" sx={{ fontSize: { xs: 40, sm: 50 }, opacity: 0.2 }}>
-              "
+              &quot;
             </Typography>
           </Box>
 

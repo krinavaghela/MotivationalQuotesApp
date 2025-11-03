@@ -62,7 +62,7 @@ export default function FavoritesTab({ favorites, onRemove, onClose }: Favorites
                     transition={{ delay: index * 0.1 }}
                     className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-100"
                   >
-                    <p className="text-lg text-gray-800 mb-3">"{quote.content}"</p>
+                    <p className="text-lg text-gray-800 mb-3">&quot;{quote.content}&quot;</p>
                     <div className="flex justify-between items-center">
                       <p className="text-purple-600 font-medium">— {quote.author}</p>
                       <button

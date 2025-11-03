@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Container,
   Typography,
@@ -46,14 +46,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ categoryId, onBack }) => {
     }
   }, [snackbar]);
 
-  useEffect(() => {
-    const cat = getCategoryById(categoryId);
-    setCategory(cat || null);
-    
-    loadQuotes();
-  }, [categoryId]);
-
-  const loadQuotes = async () => {
+  const loadQuotes = useCallback(async () => {
     setLoading(true);
     const categoryQuotes = await fetchQuotesByCategory(categoryId);
     setQuotes(categoryQuotes);
@@ -63,7 +56,14 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ categoryId, onBack }) => {
       setCurrentQuote(random);
     }
     setLoading(false);
-  };
+  }, [categoryId]);
+
+  useEffect(() => {
+    const cat = getCategoryById(categoryId);
+    setCategory(cat || null);
+    
+    loadQuotes();
+  }, [categoryId, loadQuotes]);
 
   const handleNewQuote = () => {
     if (quotes.length > 0) {
@@ -190,7 +190,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({ categoryId, onBack }) => {
                     fontSize: { xs: '1.5rem', md: '2rem' },
                   }}
                 >
-                  "{currentQuote.content}"
+                  &quot;{currentQuote.content}&quot;
                 </Typography>
                 <Typography
                   variant="h6"

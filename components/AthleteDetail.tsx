@@ -171,7 +171,7 @@ const AthleteDetail: React.FC<AthleteDetailProps> = ({
             </Box>
             <Box sx={{ p: 3 }}>
               <Typography variant="body2" color="text.secondary">
-                Watch: {athlete.name}'s inspirational journey
+                Watch: {athlete.name}&apos;s inspirational journey
               </Typography>
               <Link
                 href={`https://www.youtube.com/watch?v=${athlete.youtubeId}`}
@@ -211,7 +211,7 @@ const AthleteDetail: React.FC<AthleteDetailProps> = ({
               How to Practice
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-              Beginner-friendly steps to apply {athlete.name.split(' ')[0]}'s techniques:
+              Beginner-friendly steps to apply {athlete.name.split(' ')[0]}&apos;s techniques:
             </Typography>
             <List>
               {athlete.practice.map((step, index) => (

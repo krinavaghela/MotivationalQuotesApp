@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
 import "./globals.css";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Daily Motivation - Inspirational Quotes",
   description: "Get inspired with daily motivational quotes",
 };

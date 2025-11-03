@@ -7,8 +7,32 @@ export interface Quote {
   tags?: string[];
 }
 
+type QuotableSource = {
+  name: 'quotable';
+  url: (tags: string[]) => string;
+  transform: (data: any) => Quote;
+  tags: string[][];
+};
+
+type TypefitSource = {
+  name: 'typefit';
+  url: () => string;
+  transform: (data: any[], index: number) => Quote;
+  tags: [];
+  isArray: true;
+};
+
+type ZenQuotesSource = {
+  name: 'zenquotes';
+  url: () => string;
+  transform: (data: any[]) => Quote;
+  tags: [];
+};
+
+type QuoteSource = QuotableSource | TypefitSource | ZenQuotesSource;
+
 // Quote API sources with variety
-const QUOTE_APIS = [
+const QUOTE_APIS: QuoteSource[] = [
   // Quotable.io - wide variety of categories
   {
     name: 'quotable',
@@ -79,7 +103,7 @@ const isRecent = (quoteId: string): boolean => {
 };
 
 // Fetch quote from a specific API source
-const fetchFromSource = async (source: typeof QUOTE_APIS[0], attempt: number = 0): Promise<Quote | null> => {
+const fetchFromSource = async (source: QuoteSource, attempt: number = 0): Promise<Quote | null> => {
   try {
     let response: Response;
     let data: any;
@@ -90,7 +114,10 @@ const fetchFromSource = async (source: typeof QUOTE_APIS[0], attempt: number = 0
         response = await fetch(source.url());
         typefitQuotesCache = await response.json();
       }
-      const allQuotes = typefitQuotesCache;
+      const allQuotes = typefitQuotesCache ?? [];
+      if (allQuotes.length === 0) {
+        return null;
+      }
       const randomIndex = Math.floor(Math.random() * allQuotes.length);
       data = source.transform(allQuotes, randomIndex);
       return data;

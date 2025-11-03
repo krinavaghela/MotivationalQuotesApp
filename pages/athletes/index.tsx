@@ -187,7 +187,7 @@ export default function AthletesPage() {
               Athletes & Mindset 💪
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ fontSize: '1.1rem' }}>
-              Learn from the world's greatest athletes and their mental training techniques
+              Learn from the world&apos;s greatest athletes and their mental training techniques
             </Typography>
           </Box>
 
