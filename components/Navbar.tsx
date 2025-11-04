@@ -2,7 +2,16 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Home, Favorite, Settings } from '@mui/icons-material';
+import {
+  AppBar,
+  Box,
+  Button,
+  Toolbar,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
+import { Home as HomeIcon, Favorite, Settings } from '@mui/icons-material';
 
 interface NavbarProps {
   favoritesCount: number;
@@ -10,101 +19,127 @@ interface NavbarProps {
   onNavigate: (page: 'home' | 'favorites' | 'settings') => void;
 }
 
+const navItems: Array<{ id: 'home' | 'favorites' | 'settings'; label: string; icon: React.ReactNode }> = [
+  { id: 'home', label: 'Home', icon: <HomeIcon fontSize="small" /> },
+  { id: 'favorites', label: 'Favorites', icon: <Favorite fontSize="small" /> },
+  { id: 'settings', label: 'Settings', icon: <Settings fontSize="small" /> },
+];
+
 const Navbar: React.FC<NavbarProps> = ({ favoritesCount, currentPage, onNavigate }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
-    <nav 
-      className="sticky top-0 z-50 w-full backdrop-blur-lg bg-white/80 dark:bg-gray-900/80 border-b border-gray-200 dark:border-gray-700 shadow-sm"
-      role="navigation"
-      aria-label="Main navigation"
+    <AppBar
+      position="sticky"
+      elevation={0}
+      sx={{
+        background: 'rgba(8, 10, 26, 0.72)',
+        backdropFilter: 'blur(22px)',
+        borderBottom: '1px solid rgba(148, 163, 255, 0.16)',
+      }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo/Brand */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="flex items-center"
+      <Toolbar sx={{ justifyContent: 'space-between', gap: 2, minHeight: { xs: 64, sm: 72 } }}>
+        <motion.button
+          type="button"
+          whileHover={{ scale: 1.03 }}
+          onClick={() => onNavigate('home')}
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            textAlign: 'left',
+          }}
+          aria-label="Go to home page"
+        >
+          <Typography
+            variant={isMobile ? 'h6' : 'h5'}
+            sx={{
+              fontWeight: 700,
+              background: 'linear-gradient(135deg, #b2c7ff 0%, #f5f3ff 45%, #a0b5ff 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}
           >
-            <button
-              onClick={() => onNavigate('home')}
-              className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent hover:scale-105 transition-transform"
-              aria-label="Go to home page"
-            >
-              Daily Motivation ✨
-            </button>
-          </motion.div>
+            Daily Motivation ✨
+          </Typography>
+        </motion.button>
 
-          {/* Navigation Links */}
-          <div className="flex items-center space-x-1">
-            {/* Home */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => onNavigate('home')}
-              className={`relative px-4 py-2 rounded-lg font-medium transition-all flex items-center space-x-2 ${
-                currentPage === 'home'
-                  ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-lg'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-              }`}
-              aria-label="Home"
-              aria-current={currentPage === 'home' ? 'page' : undefined}
-            >
-              <Home sx={{ fontSize: 20 }} />
-              <span className="hidden sm:inline">Home</span>
-            </motion.button>
+        <Box component="nav" role="navigation" aria-label="Primary">
+          <Box sx={{ display: 'flex', gap: 1.2, alignItems: 'center' }}>
+            {navItems.map((item) => {
+              const isActive = currentPage === item.id;
+              const countBadge = item.id === 'favorites' && favoritesCount > 0;
 
-            {/* Favorites */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => onNavigate('favorites')}
-              className={`relative px-4 py-2 rounded-lg font-medium transition-all flex items-center space-x-2 ${
-                currentPage === 'favorites'
-                  ? 'bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-              }`}
-              aria-label={`Favorites ${favoritesCount > 0 ? `(${favoritesCount} items)` : ''}`}
-              aria-current={currentPage === 'favorites' ? 'page' : undefined}
-            >
-              <Favorite 
-                sx={{ 
-                  fontSize: 20,
-                  fill: favoritesCount > 0 ? 'currentColor' : 'none'
-                }} 
-              />
-              <span className="hidden sm:inline">Favorites</span>
-              {favoritesCount > 0 && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
-                  aria-label={`${favoritesCount} favorite quotes`}
+              return (
+                <Button
+                  key={item.id}
+                  onClick={() => onNavigate(item.id)}
+                  startIcon={item.icon}
+                  aria-current={isActive ? 'page' : undefined}
+                  aria-label={
+                    item.id === 'favorites' && countBadge
+                      ? `${item.label} ${favoritesCount}`
+                      : item.label
+                  }
+                  sx={{
+                    borderRadius: 999,
+                    textTransform: 'none',
+                    fontWeight: 600,
+                    px: 2.4,
+                    py: 1,
+                    fontSize: { xs: '0.8rem', sm: '0.95rem' },
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 0.4,
+                    background: isActive
+                      ? 'linear-gradient(135deg, rgba(99, 102, 241, 0.88), rgba(168, 85, 247, 0.92))'
+                      : 'rgba(148, 163, 255, 0.14)',
+                    color: isActive ? '#fff' : 'rgba(229, 231, 255, 0.88)',
+                    border: isActive ? '1px solid rgba(148, 181, 255, 0.55)' : '1px solid rgba(148, 163, 255, 0.18)',
+                    boxShadow: isActive ? '0 12px 28px rgba(99, 102, 241, 0.35)' : '0 8px 18px rgba(15, 23, 42, 0.25)',
+                    transition: 'all 0.25s ease',
+                    '&:hover': {
+                      transform: 'translateY(-2px)',
+                      background: isActive
+                        ? 'linear-gradient(135deg, rgba(129, 140, 248, 0.95), rgba(196, 113, 237, 0.95))'
+                        : 'rgba(148, 163, 255, 0.24)',
+                    },
+                    '&:focus-visible': {
+                      outline: 'none',
+                      boxShadow: '0 0 0 3px rgba(99, 102, 241, 0.45)',
+                    },
+                  }}
                 >
-                  {favoritesCount}
-                </motion.span>
-              )}
-            </motion.button>
-
-            {/* Settings */}
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => onNavigate('settings')}
-              className={`relative px-4 py-2 rounded-lg font-medium transition-all flex items-center space-x-2 ${
-                currentPage === 'settings'
-                  ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg'
-                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
-              }`}
-              aria-label="Settings"
-              aria-current={currentPage === 'settings' ? 'page' : undefined}
-            >
-              <Settings sx={{ fontSize: 20 }} />
-              <span className="hidden sm:inline">Settings</span>
-            </motion.button>
-          </div>
-        </div>
-      </div>
-    </nav>
+                  <Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    {item.label}
+                    {countBadge && (
+                      <Box
+                        component="span"
+                        sx={{
+                          ml: 0.5,
+                          minWidth: 20,
+                          px: 0.6,
+                          fontSize: '0.75rem',
+                          fontWeight: 700,
+                          borderRadius: 999,
+                          backgroundColor: 'rgba(255,255,255,0.2)',
+                          color: '#fff',
+                          textAlign: 'center',
+                        }}
+                      >
+                        {favoritesCount}
+                      </Box>
+                    )}
+                  </Box>
+                </Button>
+              );
+            })}
+          </Box>
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 
