@@ -110,13 +110,13 @@ const AthleteCard = ({
           position: 'relative',
           overflow: 'hidden',
           backdropFilter: 'blur(18px)',
-          background: `linear-gradient(135deg, ${alpha('#f8f9ff', 0.72)}, ${alpha('#e0e7ff', 0.85)})`,
-          border: '1px solid rgba(210, 220, 255, 0.55)',
-          boxShadow: '0 24px 45px rgba(130, 145, 200, 0.28)',
+          background: 'linear-gradient(145deg, #ffffff 0%, #eef1ff 100%)',
+          border: '1px solid rgba(200, 208, 245, 0.65)',
+          boxShadow: '0 24px 48px rgba(120, 135, 200, 0.25)',
           transition: 'transform 0.3s ease, box-shadow 0.3s ease',
           '&:hover': {
             transform: 'translateY(-10px)',
-            boxShadow: '0 34px 65px rgba(110, 125, 190, 0.38)',
+            boxShadow: '0 34px 70px rgba(90, 110, 200, 0.35)',
           },
         }}
       >
@@ -172,7 +172,7 @@ const AthleteCard = ({
               <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
                 {athlete.headline}
               </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.6, color: alpha(theme.palette.text.primary, 0.78) }}>
                 {athlete.summary}
               </Typography>
               <Stack direction="row" spacing={1} flexWrap="wrap">
@@ -408,9 +408,9 @@ export default function AthleteMindsetGallery() {
               py: { xs: 5, md: 7 },
               mb: 5,
               overflow: 'hidden',
-              background: 'linear-gradient(135deg, rgba(76,81,191,0.14), rgba(118,75,162,0.18), rgba(244,114,182,0.1))',
-              border: '1px solid rgba(120, 130, 210, 0.32)',
-              boxShadow: '0 32px 65px rgba(95,105,180,0.25)',
+              background: 'linear-gradient(135deg, #15192f 0%, #2b1c54 55%, #47297d 100%)',
+              border: '1px solid rgba(255,255,255,0.14)',
+              boxShadow: '0 40px 85px rgba(21, 24, 50, 0.65)',
             }}
           >
             <Box
@@ -418,17 +418,17 @@ export default function AthleteMindsetGallery() {
                 position: 'absolute',
                 inset: 0,
                 background:
-                  'radial-gradient(circle at top right, rgba(255,255,255,0.65), transparent 55%)',
+                  'radial-gradient(circle at top right, rgba(255,255,255,0.32), transparent 60%)',
               }}
             />
             <Stack spacing={3} sx={{ position: 'relative' }}>
-              <Typography variant="overline" sx={{ letterSpacing: 2, color: alpha(theme.palette.text.primary, 0.6) }}>
+              <Typography variant="overline" sx={{ letterSpacing: 2, color: 'rgba(255,255,255,0.72)' }}>
                 Elite mindsets for everyday breakthroughs
               </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 800, lineHeight: { xs: 1.1, md: 1.05 }, maxWidth: 720 }}>
+              <Typography variant="h3" sx={{ fontWeight: 800, lineHeight: { xs: 1.1, md: 1.05 }, maxWidth: 720, color: '#fff' }}>
                 Borrow routines, rituals, and mental models from sports icons
               </Typography>
-              <Typography variant="body1" sx={{ color: alpha(theme.palette.text.primary, 0.72), maxWidth: 680 }}>
+              <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.74)', maxWidth: 680 }}>
                 Scroll through glassy playbooks, filter by the mindset you need, save your favourites, and share the stories that move you.
               </Typography>
 
@@ -442,16 +442,16 @@ export default function AthleteMindsetGallery() {
                       px: 3,
                       py: 2.5,
                       borderRadius: 4,
-                      backgroundColor: alpha('#ffffff', 0.65),
+                      backgroundColor: 'rgba(255,255,255,0.1)',
                       backdropFilter: 'blur(18px)',
-                      border: '1px solid rgba(200, 210, 245, 0.6)',
-                      boxShadow: '0 18px 38px rgba(150, 160, 205, 0.22)',
+                      border: '1px solid rgba(255,255,255,0.25)',
+                      boxShadow: '0 18px 38px rgba(20, 24, 55, 0.35)',
                     }}
                   >
-                    <Typography variant="caption" sx={{ color: alpha(theme.palette.text.primary, 0.6), letterSpacing: 1 }}>
+                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.75)', letterSpacing: 1 }}>
                       {stat.label}
                     </Typography>
-                    <Typography variant="h5" sx={{ fontWeight: 700 }}>
+                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#fff' }}>
                       {stat.value.toLocaleString()}
                     </Typography>
                   </Box>

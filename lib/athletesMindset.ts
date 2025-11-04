@@ -23,7 +23,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Tennis',
     country: 'Serbia',
     image:
-      'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1200&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/9/90/Novak_Djokovic_2019.jpg',
     headline: 'Breathing through chaos to play the next point',
     summary:
       'From practising in bomb shelters to winning 24 Grand Slams, Djokovic rewired pressure into presence through mindfulness and engineered recovery.',
@@ -53,7 +53,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Javelin Throw',
     country: 'India',
     image:
-      'https://images.unsplash.com/photo-1521417531039-58c790b36528?auto=format&fit=crop&w=1200&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/0/08/Neeraj_Chopra_%28cropped%29.jpg',
     headline: 'Rural grit polished into Olympic calm',
     summary:
       'Neeraj rebuilt himself after elbow surgery with obsessive patience, swapping self-doubt for data-driven training logs and relentless mobility work.',
@@ -82,7 +82,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Cricket',
     country: 'India',
     image:
-      'https://images.unsplash.com/photo-1521336575822-6da63fb45455?auto=format&fit=crop&w=1200&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/1/10/Jemimah_Rodrigues_%28cropped%29.jpg',
     headline: 'Joy-first batting that disarms pressure',
     summary:
       'Jemimah rebuilt confidence after being dropped from the national side by doubling down on playful practice, music, and mental reps with a growth notebook.',
@@ -111,7 +111,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Cricket',
     country: 'India',
     image:
-      'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/7/7e/Virat_Kohli_portrait.jpg',
     headline: 'Turning obsession into disciplined ferocity',
     summary:
       'Kohli transformed from a talented but inconsistent teenager into a machine by auditing nutrition, sleep, and inner talk—cultivating ruthless honesty.',
@@ -140,7 +140,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Badminton',
     country: 'India',
     image:
-      'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/5/5e/P._V._Sindhu_cropped.jpg',
     headline: 'Relentless rallies built on simple, repeatable systems',
     summary:
       'Sindhu traded teenage inconsistency for Olympic medals by trusting daily repetition and mental conditioning that rehearsed adversity before it arrived.',
@@ -169,7 +169,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Cricket',
     country: 'India',
     image:
-      'https://images.unsplash.com/photo-1529158062015-cad636e69505?auto=format&fit=crop&w=1200&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/6/6d/Mahendra_Singh_Dhoni_2016.jpg',
     headline: 'Calm captaincy through detachment and clarity',
     summary:
       'Dhoni’s superpower is emotional neutrality—reading the game two steps ahead while trusting instinct honed by relentless match simulations.',
@@ -198,7 +198,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Basketball',
     country: 'USA',
     image:
-      'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80&sat=-20',
+      'https://upload.wikimedia.org/wikipedia/commons/5/56/Kobe_Bryant_2015.jpg',
     headline: 'The Mamba Mentality: curiosity fuelled mastery',
     summary:
       'Kobe fused ferocious work ethic with film-room obsession, treating failure as intel. He reverse-engineered greatness and mentored future generations.',
@@ -227,7 +227,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Badminton',
     country: 'India',
     image:
-      'https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=1200&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/2/28/Saina_Nehwal_at_Town_hall_of_Houston_on_8_October_2017_%28cropped%29.jpg',
     headline: 'Bouncing back through grit and reinvention',
     summary:
       'Saina broke into the top ranks with relentless defence, then reinvented herself after injuries with smarter training loads and mentor check-ins.',
@@ -256,7 +256,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Football',
     country: 'Argentina',
     image:
-      'https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1200&q=80&sat=-30',
+      'https://upload.wikimedia.org/wikipedia/commons/8/89/Lionel_Messi_20180626.jpg',
     headline: 'Quiet genius anchored in family and feel',
     summary:
       'Messi compensates for size with balance, anticipation, and deep joy. His mindset blends humility, visualisation, and a childlike love for the ball.',
@@ -285,7 +285,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Para Archery',
     country: 'India',
     image:
-      'https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/6/64/Sheetal_Devi_2023_%28cropped%29.jpg',
     headline: 'Turning constraints into superpowers',
     summary:
       'Born without arms, Sheetal shoots with her feet. She embraced adaptive training, mental resilience, and community inspiration to win gold at the Para Asian Games.',
@@ -314,7 +314,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Basketball',
     country: 'USA',
     image:
-      'https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1200&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/a/ae/Michael_Jordan_in_2014.jpg',
     headline: 'Competitive fire fuelled by manufactured motivation',
     summary:
       'Jordan turned slights into rocket fuel, pairing insane competitiveness with relentless fundamentals work and imagery of big moments.',
@@ -343,7 +343,7 @@ export const athleteMindsets: AthleteMindset[] = [
     sport: 'Football',
     country: 'Argentina',
     image:
-      'https://images.unsplash.com/photo-1522770179533-24471fcdba45?auto=format&fit=crop&w=1200&q=80',
+      'https://upload.wikimedia.org/wikipedia/commons/3/3c/Lionel_Messi_on_2018.jpg',
     headline: 'Late-career reinvention rooted in trust',
     summary:
       'Messi’s move to PSG and World Cup run emphasised collaboration, trust in younger teammates, and a calmer leadership voice.',
