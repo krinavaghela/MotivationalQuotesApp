@@ -113,7 +113,7 @@ export default function AthleteDetailPage() {
             <Typography variant="h5" sx={{ fontWeight: 700, mt: 1, color: '#22164d' }}>
               {athlete.headline}
             </Typography>
-            <Typography variant="body1" sx={{ mt: 1.5, lineHeight: 1.7, color: '#3c2f6f' }}>
+            <Typography variant="body1" sx={{ mb: 3, color: '#3b2f6b', lineHeight: 1.7 }}>
               {athlete.summary}
             </Typography>
           </Box>
