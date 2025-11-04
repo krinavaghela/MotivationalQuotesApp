@@ -399,313 +399,329 @@ export default function AthleteMindsetGallery() {
       </Head>
       <Navbar favoritesCount={favoritesCount} currentPage="home" onNavigate={() => {}} />
 
-      <Container maxWidth="xl" sx={{ py: 5 }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-          <Box
-            sx={{
-              position: 'relative',
-              borderRadius: 5,
-              px: { xs: 3, md: 6 },
-              py: { xs: 5, md: 7 },
-              mb: 5,
-              overflow: 'hidden',
-              background: 'linear-gradient(135deg, #15192f 0%, #2b1c54 55%, #47297d 100%)',
-              border: '1px solid rgba(255,255,255,0.14)',
-              boxShadow: '0 40px 85px rgba(21, 24, 50, 0.65)',
-            }}
-          >
+      <Box
+        sx={{
+          minHeight: '100vh',
+          width: '100%',
+          background:
+            'radial-gradient(140% 120% at 50% 0%, #1f1144 0%, #0c081c 65%, #05030f 100%)',
+          pt: 6,
+          pb: 10,
+        }}
+      >
+        <Container maxWidth="xl">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
             <Box
               sx={{
-                position: 'absolute',
-                inset: 0,
-                background:
-                  'radial-gradient(circle at top right, rgba(255,255,255,0.32), transparent 60%)',
-              }}
-            />
-            <Stack spacing={3} sx={{ position: 'relative' }}>
-              <Typography variant="overline" sx={{ letterSpacing: 2, color: 'rgba(255,255,255,0.72)' }}>
-                Elite mindsets for everyday breakthroughs
-              </Typography>
-              <Typography variant="h3" sx={{ fontWeight: 800, lineHeight: { xs: 1.1, md: 1.05 }, maxWidth: 720, color: '#fff' }}>
-                Borrow routines, rituals, and mental models from sports icons
-              </Typography>
-              <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.74)', maxWidth: 680 }}>
-                Scroll through glassy playbooks, filter by the mindset you need, save your favourites, and share the stories that move you.
-              </Typography>
-
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 1 }}>
-                {heroStats.map((stat) => (
-                  <Box
-                    key={stat.label}
-                    sx={{
-                      flex: 1,
-                      minWidth: 180,
-                      px: 3,
-                      py: 2.5,
-                      borderRadius: 4,
-                      backgroundColor: 'rgba(255,255,255,0.1)',
-                      backdropFilter: 'blur(18px)',
-                      border: '1px solid rgba(255,255,255,0.25)',
-                      boxShadow: '0 18px 38px rgba(20, 24, 55, 0.35)',
-                    }}
-                  >
-                    <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.75)', letterSpacing: 1 }}>
-                      {stat.label}
-                    </Typography>
-                    <Typography variant="h5" sx={{ fontWeight: 700, color: '#fff' }}>
-                      {stat.value.toLocaleString()}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Stack>
-          </Box>
-
-          <Stack spacing={2.5} sx={{ mb: 4 }}>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: { xs: 'column', lg: 'row' },
-                gap: 2,
-                padding: { xs: 2.2, md: 2.8 },
-                borderRadius: 4,
-                backgroundColor: alpha('#f7f8ff', 0.6),
-                backdropFilter: 'blur(22px)',
-                border: '1px solid rgba(210, 216, 250, 0.6)',
-                boxShadow: '0 24px 48px rgba(170, 180, 225, 0.28)',
+                position: 'relative',
+                borderRadius: 5,
+                px: { xs: 3, md: 6 },
+                py: { xs: 5, md: 7 },
+                mb: 5,
+                overflow: 'hidden',
+                background: 'linear-gradient(135deg, #15192f 0%, #2b1c54 55%, #47297d 100%)',
+                border: '1px solid rgba(255,255,255,0.14)',
+                boxShadow: '0 40px 85px rgba(21, 24, 50, 0.65)',
               }}
             >
-              <TextField
-                fullWidth
-                variant="outlined"
-                placeholder="Search by athlete, sport, or mindset keyword..."
-                value={searchQuery}
-                onChange={(event) => {
-                  setSearchQuery(event.target.value);
-                  setVisibleCount(INITIAL_VISIBLE);
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Search />
-                    </InputAdornment>
-                  ),
-                }}
+              <Box
                 sx={{
-                  flex: 1,
-                  '& .MuiOutlinedInput-root': {
+                  position: 'absolute',
+                  inset: 0,
+                  background:
+                    'radial-gradient(circle at top right, rgba(255,255,255,0.32), transparent 60%)',
+                }}
+              />
+              <Stack spacing={3} sx={{ position: 'relative' }}>
+                <Typography variant="overline" sx={{ letterSpacing: 2, color: 'rgba(255,255,255,0.72)' }}>
+                  Elite mindsets for everyday breakthroughs
+                </Typography>
+                <Typography
+                  variant="h3"
+                  sx={{ fontWeight: 800, lineHeight: { xs: 1.1, md: 1.05 }, maxWidth: 720, color: '#f5f2ff' }}
+                >
+                  Borrow routines, rituals, and mental models from sports icons
+                </Typography>
+                <Typography variant="body1" sx={{ color: 'rgba(237,233,255,0.78)', maxWidth: 680, fontSize: '1.05rem' }}>
+                  Scroll through glassy playbooks, filter by the mindset you need, save your favourites, and share the stories that move you.
+                </Typography>
+
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 1 }}>
+                  {heroStats.map((stat) => (
+                    <Box
+                      key={stat.label}
+                      sx={{
+                        flex: 1,
+                        minWidth: 180,
+                        px: 3,
+                        py: 2.5,
+                        borderRadius: 4,
+                        backgroundColor: 'rgba(255,255,255,0.1)',
+                        backdropFilter: 'blur(18px)',
+                        border: '1px solid rgba(255,255,255,0.25)',
+                        boxShadow: '0 18px 38px rgba(20, 24, 55, 0.35)',
+                      }}
+                    >
+                      <Typography variant="caption" sx={{ color: 'rgba(240,238,255,0.78)', letterSpacing: 1 }}>
+                        {stat.label}
+                      </Typography>
+                      <Typography variant="h5" sx={{ fontWeight: 700, color: '#faf6ff' }}>
+                        {stat.value.toLocaleString()}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Stack>
+              </Stack>
+            </Box>
+
+            <Stack spacing={2.5} sx={{ mb: 4 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'column', lg: 'row' },
+                  gap: 2,
+                  padding: { xs: 2.2, md: 2.8 },
+                  borderRadius: 4,
+                  backgroundColor: alpha('#f7f8ff', 0.6),
+                  backdropFilter: 'blur(22px)',
+                  border: '1px solid rgba(210, 216, 250, 0.6)',
+                  boxShadow: '0 24px 48px rgba(170, 180, 225, 0.28)',
+                }}
+              >
+                <TextField
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Search by athlete, sport, or mindset keyword..."
+                  value={searchQuery}
+                  onChange={(event) => {
+                    setSearchQuery(event.target.value);
+                    setVisibleCount(INITIAL_VISIBLE);
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Search />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    flex: 1,
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: 999,
+                      backgroundColor: alpha('#ffffff', 0.75),
+                      '& fieldset': {
+                        border: '1px solid rgba(210, 216, 250, 0.7)',
+                      },
+                      '&:hover fieldset': {
+                        borderColor: alpha(theme.palette.primary.main, 0.65),
+                      },
+                      '&.Mui-focused fieldset': {
+                        borderColor: theme.palette.primary.main,
+                      },
+                    },
+                  }}
+                  aria-label="Search athletes"
+                />
+
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ xs: 'stretch', sm: 'center' }} justifyContent="flex-end">
+                  <ToggleButtonGroup
+                    value={sortOption}
+                    exclusive
+                    onChange={(_, value) => {
+                      if (value) {
+                        setSortOption(value);
+                        setVisibleCount(INITIAL_VISIBLE);
+                      }
+                    }}
+                    size="small"
+                    aria-label="Sort athletes"
+                    sx={{
+                      backgroundColor: alpha('#ffffff', 0.65),
+                      borderRadius: 999,
+                      border: '1px solid rgba(205, 212, 248, 0.65)',
+                      '& .MuiToggleButton-root': {
+                        borderRadius: 999,
+                        px: 2.5,
+                        textTransform: 'none',
+                        fontWeight: 600,
+                      },
+                      '& .Mui-selected': {
+                        background: 'linear-gradient(135deg, rgba(118,75,162,0.85), rgba(102,126,234,0.85))',
+                        color: '#fff',
+                        boxShadow: '0 12px 24px rgba(102,126,234,0.28)',
+                      },
+                    }}
+                  >
+                    <ToggleButton value="az" aria-label="A to Z">
+                      <Sort sx={{ fontSize: 18, mr: 0.5 }} /> A–Z
+                    </ToggleButton>
+                    <ToggleButton value="za" aria-label="Z to A">
+                      <Sort sx={{ fontSize: 18, mr: 0.5, transform: 'scaleX(-1)' }} /> Z–A
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+
+                  <Button
+                    variant="contained"
+                    startIcon={<RestartAlt />}
+                    onClick={resetFilters}
+                    disabled={themeFilter === 'all' && sortOption === 'az' && !searchQuery}
+                    sx={{
+                      borderRadius: 999,
+                      px: 3,
+                      textTransform: 'none',
+                      fontWeight: 600,
+                      background: 'linear-gradient(135deg, rgba(255,255,255,0.85), rgba(229,233,255,0.95))',
+                      color: theme.palette.text.primary,
+                      boxShadow: '0 18px 32px rgba(160, 170, 215, 0.35)',
+                      '&:hover': {
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.92), rgba(215,222,255,1))',
+                      },
+                      '&.Mui-disabled': {
+                        opacity: 0.45,
+                      },
+                    }}
+                  >
+                    Reset
+                  </Button>
+                </Stack>
+              </Box>
+
+              <Box
+                sx={{
+                  overflowX: 'auto',
+                  display: 'flex',
+                  gap: 1,
+                  pb: 0.5,
+                  '&::-webkit-scrollbar': { height: 6 },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: alpha(theme.palette.primary.main, 0.3),
                     borderRadius: 999,
-                    backgroundColor: alpha('#ffffff', 0.75),
-                    '& fieldset': {
-                      border: '1px solid rgba(210, 216, 250, 0.7)',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: alpha(theme.palette.primary.main, 0.65),
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: theme.palette.primary.main,
-                    },
                   },
                 }}
-                aria-label="Search athletes"
-              />
-
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} alignItems={{ xs: 'stretch', sm: 'center' }} justifyContent="flex-end">
+              >
                 <ToggleButtonGroup
-                  value={sortOption}
+                  value={themeFilter}
                   exclusive
                   onChange={(_, value) => {
-                    if (value) {
-                      setSortOption(value);
+                    if (value !== null) {
+                      setThemeFilter(value);
                       setVisibleCount(INITIAL_VISIBLE);
                     }
                   }}
-                  size="small"
-                  aria-label="Sort athletes"
+                  size={isMobile ? 'small' : 'medium'}
+                  aria-label="Mindset theme"
                   sx={{
                     backgroundColor: alpha('#ffffff', 0.65),
                     borderRadius: 999,
-                    border: '1px solid rgba(205, 212, 248, 0.65)',
+                    border: '1px solid rgba(210, 216, 250, 0.65)',
                     '& .MuiToggleButton-root': {
                       borderRadius: 999,
+                      textTransform: 'capitalize',
                       px: 2.5,
-                      textTransform: 'none',
-                      fontWeight: 600,
                     },
                     '& .Mui-selected': {
-                      background: 'linear-gradient(135deg, rgba(118,75,162,0.85), rgba(102,126,234,0.85))',
+                      background: 'linear-gradient(135deg, rgba(76,81,191,0.85), rgba(118,75,162,0.85))',
                       color: '#fff',
-                      boxShadow: '0 12px 24px rgba(102,126,234,0.28)',
+                      boxShadow: '0 12px 24px rgba(90,100,190,0.28)',
                     },
                   }}
                 >
-                  <ToggleButton value="az" aria-label="A to Z">
-                    <Sort sx={{ fontSize: 18, mr: 0.5 }} /> A–Z
+                  <ToggleButton value="all">
+                    All focuses
                   </ToggleButton>
-                  <ToggleButton value="za" aria-label="Z to A">
-                    <Sort sx={{ fontSize: 18, mr: 0.5, transform: 'scaleX(-1)' }} /> Z–A
-                  </ToggleButton>
+                  {themeOptions.map((themeKey) => (
+                    <ToggleButton key={themeKey} value={themeKey}>
+                      {themeLabel(themeKey)}
+                    </ToggleButton>
+                  ))}
                 </ToggleButtonGroup>
+              </Box>
+            </Stack>
 
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+              <Box component="span" sx={{ color: '#d8d3ff', fontWeight: 600 }}>
+                Showing {displayedAthletes.length}
+              </Box>{' '}
+              of {filteredAthletes.length} mindset playbooks
+            </Typography>
+
+            <Grid container spacing={3}>
+              <AnimatePresence>
+                {displayedAthletes.map((athlete) => (
+                  <Grid item xs={12} sm={6} md={4} key={athlete.slug} sx={{ display: 'flex' }}>
+                    <AthleteCard
+                      athlete={athlete}
+                      onSelect={(a) => {
+                        setSelectedAthlete(a);
+                        setRandomOpen(false);
+                      }}
+                      isFavorite={Boolean(favorites[athlete.slug])}
+                      onFavoriteToggle={handleFavoriteToggle}
+                    />
+                  </Grid>
+                ))}
+              </AnimatePresence>
+            </Grid>
+
+            {hasMore && (
+              <Box ref={loadMoreRef} sx={{ textAlign: 'center', mt: 6 }}>
                 <Button
-                  variant="contained"
-                  startIcon={<RestartAlt />}
-                  onClick={resetFilters}
-                  disabled={themeFilter === 'all' && sortOption === 'az' && !searchQuery}
+                  variant="outlined"
+                  startIcon={<ShareIcon sx={{ transform: 'rotate(90deg)' }} />}
+                  onClick={handleLoadMore}
                   sx={{
                     borderRadius: 999,
-                    px: 3,
+                    px: 4,
                     textTransform: 'none',
                     fontWeight: 600,
-                    background: 'linear-gradient(135deg, rgba(255,255,255,0.85), rgba(229,233,255,0.95))',
-                    color: theme.palette.text.primary,
-                    boxShadow: '0 18px 32px rgba(160, 170, 215, 0.35)',
-                    '&:hover': {
-                      background: 'linear-gradient(135deg, rgba(255,255,255,0.92), rgba(215,222,255,1))',
-                    },
-                    '&.Mui-disabled': {
-                      opacity: 0.45,
-                    },
                   }}
                 >
-                  Reset
+                  Load more mindsets
                 </Button>
-              </Stack>
-            </Box>
+              </Box>
+            )}
 
-            <Box
-              sx={{
-                overflowX: 'auto',
-                display: 'flex',
-                gap: 1,
-                pb: 0.5,
-                '&::-webkit-scrollbar': { height: 6 },
-                '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: alpha(theme.palette.primary.main, 0.3),
-                  borderRadius: 999,
-                },
-              }}
-            >
-              <ToggleButtonGroup
-                value={themeFilter}
-                exclusive
-                onChange={(_, value) => {
-                  if (value !== null) {
-                    setThemeFilter(value);
-                    setVisibleCount(INITIAL_VISIBLE);
-                  }
-                }}
-                size={isMobile ? 'small' : 'medium'}
-                aria-label="Mindset theme"
+            {!hasMore && filteredAthletes.length > 0 && (
+              <Typography variant="body2" color="text.secondary" sx={{ mt: 4, textAlign: 'center' }}>
+                End of the wall—tap the spark icon for a random mentor.
+              </Typography>
+            )}
+
+            {filteredAthletes.length === 0 && (
+              <Box
                 sx={{
-                  backgroundColor: alpha('#ffffff', 0.65),
-                  borderRadius: 999,
-                  border: '1px solid rgba(210, 216, 250, 0.65)',
-                  '& .MuiToggleButton-root': {
-                    borderRadius: 999,
-                    textTransform: 'capitalize',
-                    px: 2.5,
-                  },
-                  '& .Mui-selected': {
-                    background: 'linear-gradient(135deg, rgba(76,81,191,0.85), rgba(118,75,162,0.85))',
-                    color: '#fff',
-                    boxShadow: '0 12px 24px rgba(90,100,190,0.28)',
-                  },
+                  textAlign: 'center',
+                  py: 8,
+                  borderRadius: 4,
+                  backgroundColor: alpha(theme.palette.primary.main, 0.07),
                 }}
               >
-                <ToggleButton value="all">
-                  All focuses
-                </ToggleButton>
-                {themeOptions.map((themeKey) => (
-                  <ToggleButton key={themeKey} value={themeKey}>
-                    {themeLabel(themeKey)}
-                  </ToggleButton>
-                ))}
-              </ToggleButtonGroup>
-            </Box>
-          </Stack>
-
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Showing {displayedAthletes.length} of {filteredAthletes.length} mindset playbooks
-          </Typography>
-
-          <Grid container spacing={3}>
-            <AnimatePresence>
-              {displayedAthletes.map((athlete) => (
-                <Grid item xs={12} sm={6} md={4} key={athlete.slug} sx={{ display: 'flex' }}>
-                  <AthleteCard
-                    athlete={athlete}
-                    onSelect={(a) => {
-                      setSelectedAthlete(a);
-                      setRandomOpen(false);
-                    }}
-                    isFavorite={Boolean(favorites[athlete.slug])}
-                    onFavoriteToggle={handleFavoriteToggle}
-                  />
-                </Grid>
-              ))}
-            </AnimatePresence>
-          </Grid>
-
-          {hasMore && (
-            <Box ref={loadMoreRef} sx={{ textAlign: 'center', mt: 6 }}>
-              <Button
-                variant="outlined"
-                startIcon={<ShareIcon sx={{ transform: 'rotate(90deg)' }} />}
-                onClick={handleLoadMore}
-                sx={{
-                  borderRadius: 999,
-                  px: 4,
-                  textTransform: 'none',
-                  fontWeight: 600,
-                }}
-              >
-                Load more mindsets
-              </Button>
-            </Box>
-          )}
-
-          {!hasMore && filteredAthletes.length > 0 && (
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 4, textAlign: 'center' }}>
-              End of the wall—tap the spark icon for a random mentor.
-            </Typography>
-          )}
-
-          {filteredAthletes.length === 0 && (
-            <Box
-              sx={{
-                textAlign: 'center',
-                py: 8,
-                borderRadius: 4,
-                backgroundColor: alpha(theme.palette.primary.main, 0.07),
-              }}
-            >
-              <Typography variant="h6" sx={{ mb: 1 }}>
-                No playbooks match that filter yet.
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Reset your filters or try searching by a different quality—resilience, leadership, calm.
-              </Typography>
-            </Box>
-          )}
-        </motion.div>
-      </Container>
-
-      <Tooltip title="Surprise me with a mindset" placement="left">
-        <Fab
-          color="primary"
-          size="large"
-          onClick={openRandomAthlete}
-          sx={{
-            position: 'fixed',
-            bottom: 24,
-            right: 24,
-            boxShadow: '0 22px 45px rgba(102,126,234,0.35)',
-          }}
-        >
-          <AutoAwesome />
-        </Fab>
-      </Tooltip>
+                <Typography variant="h6" sx={{ mb: 1 }}>
+                  No playbooks match that filter yet.
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Reset your filters or try searching by a different quality—resilience, leadership, calm.
+                </Typography>
+              </Box>
+            )}
+          </motion.div>
+        </Container>
+        <Tooltip title="Surprise me with a mindset" placement="left">
+          <Fab
+            color="primary"
+            size="large"
+            onClick={openRandomAthlete}
+            sx={{
+              position: 'fixed',
+              bottom: 24,
+              right: 24,
+              boxShadow: '0 22px 45px rgba(102,126,234,0.35)',
+            }}
+          >
+            <AutoAwesome />
+          </Fab>
+        </Tooltip>
+      </Box>
 
       <Dialog
         open={Boolean(selectedAthlete)}
